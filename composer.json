@@ -1,0 +1,41 @@
+{
+    "name":              "ocramius/change-set",
+    "description":       "A library to compute, commit and rollback simple changesets, tracking insertions, deletions and updates",
+    "type":              "library",
+    "license":           "MIT",
+    "homepage":          "https://github.com/Ocramius/ChangeSet",
+    "minimum-stability": "dev",
+    "keywords":          [
+        "unit of work",
+        "changeset",
+        "diff",
+        "change set"
+    ],
+    "authors": [
+        {
+            "name":     "Marco Pivetta",
+            "email":    "ocramius@gmail.com",
+            "homepage": "http://ocramius.github.com/"
+        }
+    ],
+    "require": {
+        "php": ">=5.3.3"
+    },
+    "require-dev": {
+        "phpunit/phpunit":           ">=3.7",
+        "phpmd/phpmd":               "1.4.*",
+        "squizlabs/php_codesniffer": "1.4.*",
+        "zendframework/zend-stdlib": "2.*",
+        "satooshi/php-coveralls":    "~0.6"
+    },
+    "autoload": {
+        "psr-0": {
+            "ChangeSet\\": "src"
+        }
+    },
+    "extra": {
+        "branch-alias": {
+            "dev-master": "1.0.x-dev"
+        }
+    }
+}
