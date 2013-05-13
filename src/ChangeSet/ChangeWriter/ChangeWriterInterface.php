@@ -16,33 +16,34 @@
  * and is licensed under the MIT license.
  */
 
-namespace ChangeSet\Comparator;
+namespace ChangeSet\ChangeWriter;
 
 use ChangeSet\ChangeInterface;
 
 /**
- * Comparator that is able to create an {@see \ChangeSet\ChangeInterface}
- * from a given object and its previous {@see \ChangeSet\ChangeInterface}
+ * Change writer - writes and rolls back {@see \ChangeSet\ChangeInterface} into a given object
  *
  * @author Marco Pivetta <ocramius@gmail.com>
  * @license MIT
  */
-interface ComparatorInterface
+interface ChangeWriterInterface
 {
     /**
-     * @param object $object
+     * Write the provided changes to an object
      *
-     * @return \ChangeSet\ChangeInterface
+     * @param \ChangeSet\ChangeInterface $change
+     * @param object                     $object
      *
-     * @todo does this belong to this interface or to a different one?
+     * @return object
      */
-    public function createChange($object);
+    public function write(ChangeInterface $change, $object);
 
     /**
-     * @param object                     $object
-     * @param \ChangeSet\ChangeInterface $changeSet
+     * Revert the provided change
      *
-     * @return \ChangeSet\ChangeInterface
+     * @param \ChangeSet\ChangeInterface $change
+     *
+     * @return object
      */
-    public function compare($object, ChangeInterface $changeSet);
+    public function revert(ChangeInterface $change);
 }
