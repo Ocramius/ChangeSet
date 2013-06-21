@@ -20,8 +20,7 @@ class ChangeSet
 	public function add($object)
 	{
 		if (isset($this->newInstances[$object]) || isset($this->managedInstances[$object])) {
-			// @todo maybe just silently ignore this and unset blindly?
-			throw new \InvalidArgumentException('I ALREADY HAZ IT!');
+			return;
 		}
 		
 		unset($this->removedInstances[$object]);
@@ -33,8 +32,7 @@ class ChangeSet
 	public function register($object)
 	{
 		if (isset($this->managedInstances[$object])) {
-			// @todo maybe just silently ignore this and unset blindly?
-			throw new \InvalidArgumentException('I ALREADY HAZ IT!');
+			return;
 		}
 		
 		unset($this->newInstances[$object], $this->removedInstances[$object]);
@@ -46,8 +44,7 @@ class ChangeSet
 	public function remove($object)
 	{
 		if (isset($this->removedInstances[$object])) {
-			// @todo maybe just silently ignore this and unset blindly?
-			throw new \InvalidArgumentException('I ALREADY HAZ IT!');
+			return;
 		}
 		
 		unset($this->newInstances[$object], $this->managedInstances[$object]);

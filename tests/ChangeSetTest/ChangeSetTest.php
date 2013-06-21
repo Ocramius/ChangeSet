@@ -20,8 +20,12 @@ class ChangeSetTest extends PHPUnit_Framework_TestCase
 		
 		$this->assertSame(array($object), $changeSet->getNew());
 		
-		$this->setExpectedException('InvalidArgumentException');
 		$changeSet->add($object);
+		$this->assertSame(
+			array($object), 
+			$changeSet->getNew(), 
+			'Further "new" registration is ignored'
+		);
 	}
 
 	public function testRegistersManagedInstances()
@@ -41,8 +45,12 @@ class ChangeSetTest extends PHPUnit_Framework_TestCase
 		
 		$this->assertSame(array($object), $changeSet->getChangedManaged());
 		
-		$this->setExpectedException('InvalidArgumentException');
 		$changeSet->register($object);
+		$this->assertSame(
+			array($object), 
+			$changeSet->getChangedManaged(), 
+			'Further "managed" registration is ignored'
+		);
 	}
 	
 	public function testRegistersRemovedInstances()
@@ -58,8 +66,12 @@ class ChangeSetTest extends PHPUnit_Framework_TestCase
 		
 		$this->assertSame(array($object), $changeSet->getRemoved());
 		
-		$this->setExpectedException('InvalidArgumentException');
 		$changeSet->remove($object);
+		$this->assertSame(
+			array($object), 
+			$changeSet->getRemoved(), 
+			'Further "remove" registration is ignored'
+		);
 	}
 	
 	public function testClear()
