@@ -26,6 +26,8 @@ class ChangeSet
 		
 		unset($this->removedInstances[$object]);
 		$this->newInstances[$object] = $this->changeGenerator->getChange($object);
+		
+		// @todo trigger event here to allow cascades/collections?
 	}
 	
 	public function register($object)
@@ -37,6 +39,8 @@ class ChangeSet
 		
 		unset($this->newInstances[$object], $this->removedInstances[$object]);
 		$this->managedInstances[$object] = $this->changeGenerator->getChange($object)->takeSnapshot();
+		
+		// @todo trigger event here to allow cascades/collections?
 	}
 	
 	public function remove($object)
@@ -48,6 +52,8 @@ class ChangeSet
 		
 		unset($this->newInstances[$object], $this->managedInstances[$object]);
 		$this->removedInstances[$object] = $this->changeGenerator->getChange($object);
+		
+		// @todo trigger event here to allow cascades/collections?
 	}
 	
 	public function isTracking($object)
@@ -70,11 +76,6 @@ class ChangeSet
 		}
 		
 		return $cleaned;
-	}
-	
-	public function takeSnapshot()
-	{
-		// @todo even necessary?
 	}
 	
 	public function clear()
