@@ -1,0 +1,22 @@
+{
+    "minimum-stability": "dev",
+    "require": {
+        "php":                     ">=5.3.3",
+        "zendframework/zend-code": "2.*"
+    },
+    "require-dev": {
+        "phpunit/phpunit":           ">=3.7",
+        "phpmd/phpmd":               "1.4.*",
+        "squizlabs/php_codesniffer": "1.4.*",
+        "zendframework/zend-stdlib": "2.*",
+        "satooshi/php-coveralls":    "~0.6"
+    },
+    "suggest": {
+        "zendframework/zend-stdlib": "To use the hydrator proxy"
+    },
+    "autoload": {
+        "psr-0": {
+            "ChangeSet\\": "src"
+        }
+    }
+}
