@@ -36,7 +36,7 @@ class ChangeSet
 		}
 		
 		unset($this->newInstances[$object], $this->removedInstances[$object]);
-		$this->managedInstances[$object] = $this->changeGenerator->getChange($object);
+		$this->managedInstances[$object] = $this->changeGenerator->getChange($object)->takeSnapshot();
 	}
 	
 	public function remove($object)
@@ -72,8 +72,48 @@ class ChangeSet
 		return $cleaned;
 	}
 	
+	public function takeSnapshot()
+	{
+		// @todo even necessary?
+	}
+	
 	public function clear()
 	{
 		return new static();
+	}
+	
+	public function getNew()
+	{
+		$items = array();
+		
+		foreach ($this->newInstances as $newInstance) {
+			$items[] = $newInstance;
+		}
+		
+		return $items;
+	}
+	
+	public function getChangedManaged()
+	{
+		$items = array();
+		
+		foreach ($this->managedInstances as $removedInstance) {
+			if ($this->managedInstances->offsetGet($removedInstance)->isDirty()) {
+				$items[] = $removedInstance;
+			}
+		}
+		
+		return $items;
+	}
+	
+	public function getRemoved()
+	{
+		$items = array();
+		
+		foreach ($this->removedInstances as $removedInstance) {
+			$items[] = $removedInstance;
+		}
+		
+		return $items;
 	}
 }

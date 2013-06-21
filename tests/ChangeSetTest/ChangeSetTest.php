@@ -12,22 +12,34 @@ class ChangeSetTest extends PHPUnit_Framework_TestCase
 		$changeSet = new ChangeSet();
 		$object = new \stdClass();
 		
+		$this->assertEmpty($changeSet->getNew());
+		
 		$this->assertFalse($changeSet->isTracking($object));
 		$changeSet->add($object);
 		$this->assertTrue($changeSet->isTracking($object));
 		
+		$this->assertSame(array($object), $changeSet->getNew());
+		
 		$this->setExpectedException('InvalidArgumentException');
 		$changeSet->add($object);
 	}
-	
+
 	public function testRegistersManagedInstances()
 	{
 		$changeSet = new ChangeSet();
 		$object = new \stdClass();
 		
+		$this->assertEmpty($changeSet->getChangedManaged());
+		
 		$this->assertFalse($changeSet->isTracking($object));
 		$changeSet->register($object);
 		$this->assertTrue($changeSet->isTracking($object));
+		
+		$this->assertEmpty($changeSet->getChangedManaged());
+		
+		$object->foo = 'bar';
+		
+		$this->assertSame(array($object), $changeSet->getChangedManaged());
 		
 		$this->setExpectedException('InvalidArgumentException');
 		$changeSet->register($object);
@@ -38,9 +50,13 @@ class ChangeSetTest extends PHPUnit_Framework_TestCase
 		$changeSet = new ChangeSet();
 		$object = new \stdClass();
 		
+		$this->assertEmpty($changeSet->getRemoved());
+		
 		$this->assertFalse($changeSet->isTracking($object));
 		$changeSet->remove($object);
 		$this->assertTrue($changeSet->isTracking($object));
+		
+		$this->assertSame(array($object), $changeSet->getRemoved());
 		
 		$this->setExpectedException('InvalidArgumentException');
 		$changeSet->remove($object);
