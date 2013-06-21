@@ -2,7 +2,7 @@
 
 namespace ChangeSet;
 
-class ChangeGenerator
+class ChangeFactory
 {
     public function getChange($object)
     {

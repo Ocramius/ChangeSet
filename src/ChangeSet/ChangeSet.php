@@ -14,7 +14,7 @@ class ChangeSet
         $this->newInstances = new \SplObjectStorage();
         $this->managedInstances = new \SplObjectStorage();
         $this->removedInstances = new \SplObjectStorage();
-        $this->changeGenerator  = new ChangeGenerator();
+        $this->changeGenerator  = new ChangeFactory();
     }
 
     public function add($object)
