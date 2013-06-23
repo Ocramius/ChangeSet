@@ -2,6 +2,8 @@
 
 namespace ChangeSet;
 
+use ChangeSet\IdentityExtractor\IdentityExtractorFactory;
+
 // @todo implement collection interfaces?
 class IdentityMap
 {

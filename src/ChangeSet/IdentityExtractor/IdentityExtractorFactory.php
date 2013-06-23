@@ -1,6 +1,6 @@
 <?php
 
-namespace ChangeSet;
+namespace ChangeSet\IdentityExtractor;
 
 // @todo implement collection interfaces?
 class IdentityExtractorFactory
