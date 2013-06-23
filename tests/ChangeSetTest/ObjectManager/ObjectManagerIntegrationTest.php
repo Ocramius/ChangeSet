@@ -88,4 +88,30 @@ class ObjectManagerIntegrationTest extends PHPUnit_Framework_TestCase
 		
 		$this->assertSame($bar, $repository->get(456));
 	}
+	
+	public function testRepositoryRemove()
+	{
+		$listener = $this->getMock('stdClass', array('__invoke'));
+		
+		$listener->expects($this->exactly(2))->method('__invoke');
+			
+		$this->changeSetEventManager->attach('remove', $listener);
+		
+		// @todo should repositories be fetched somhow differently? Maybe force per-hand instantiation?
+		$repository = $this->objectManager->getRepository('stdClass');
+		
+		$this->assertInstanceOf('ChangeSet\\ObjectRepository\\ObjectRepositoryInterface', $repository);
+		
+		$foo = new \stdClass();
+		$foo->identity = 123;
+		$bar = new \stdClass();
+		$bar->identity = 456;
+		
+		// @todo should this throw exceptions on duplicates?
+		$repository->add($foo);
+		$repository->add($bar);
+		
+		$repository->remove($foo);
+		$repository->remove($bar);
+	}
 }

@@ -24,6 +24,8 @@ class SimpleObjectRepository implements ObjectRepositoryInterface
 	public function add($object)
 	{
 		if ($this->identityMap->add($object)) {
+			// should instances be replaced or silently ignored? Or should an exception be thrown
+			// on un-managed items?
 			$this->unitOfWork->registerNew($object);
 			
 			return true;
@@ -34,6 +36,14 @@ class SimpleObjectRepository implements ObjectRepositoryInterface
 	
 	public function remove($object)
 	{
+		if (! $this->identityMap->contains($object)) {
+			// clear any registered items for this identifier (now or later?)
+			$object = $managedObject;
+		}
+		
+		$this->unitOfWork->registerRemoved($object);
+		
+		return true;
 	}
 	
 	public function get($id)

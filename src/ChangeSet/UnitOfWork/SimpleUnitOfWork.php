@@ -24,6 +24,7 @@ class SimpleUnitOfWork implements UnitOfWorkInterface
 	
 	public function registerRemoved($object)
 	{
+		$this->changeSet->remove($object);
 	}
 	
 	public function commit()

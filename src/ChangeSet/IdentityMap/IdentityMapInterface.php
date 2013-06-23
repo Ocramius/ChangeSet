@@ -13,4 +13,6 @@ interface IdentityMapInterface
     public function remove($object);
 
     public function get($className, $id);
+	
+	public function contains($object);
 }
