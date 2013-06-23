@@ -7,13 +7,13 @@ use PHPUnit_Framework_TestCase;
 
 class ChangeSetTest extends PHPUnit_Framework_TestCase
 {
-	protected $eventManager;
-	protected $changeSet;
-	public function setUp()
-	{
-		$this->eventManager = $this->getMock('Zend\EventManager\EventManagerInterface');
-		$this->changeSet = new ChangeSet($this->eventManager);
-	}
+    protected $eventManager;
+    protected $changeSet;
+    public function setUp()
+    {
+        $this->eventManager = $this->getMock('Zend\EventManager\EventManagerInterface');
+        $this->changeSet = new ChangeSet($this->eventManager);
+    }
     public function testRegistersNewInstances()
     {
         $object = new \stdClass();

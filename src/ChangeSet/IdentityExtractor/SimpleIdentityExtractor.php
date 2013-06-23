@@ -13,9 +13,9 @@ class SimpleIdentityExtractor implements IdentityExtractorInterface
     {
         return $this->encodeIdentifier($this->getIdentity($object));
     }
-	
-	public function encodeIdentifier($identifier)
-	{
-		return null === $identifier ? null : 'stdClass@' . $identifier;
-	}
+
+    public function encodeIdentifier($identifier)
+    {
+        return null === $identifier ? null : 'stdClass@' . $identifier;
+    }
 }

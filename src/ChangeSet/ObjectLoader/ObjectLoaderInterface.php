@@ -4,5 +4,5 @@ namespace ChangeSet\ObjectLoader;
 
 interface ObjectLoaderInterface
 {
-	public function loadObject($id, $className);
+    public function loadObject($id, $className);
 }
