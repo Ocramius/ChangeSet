@@ -2,6 +2,8 @@
 
 namespace ChangeSet\UnitOfWork;
 
+use ChangeSet\Committer\CommitterInterface;
+
 interface UnitOfWorkInterface
 {
     public function registerClean($object);
@@ -10,7 +12,7 @@ interface UnitOfWorkInterface
 
     public function registerRemoved($object);
 
-    public function commit();
+    public function commit(CommitterInterface $committer);
 
     // @TODO rollback?
 }

@@ -3,6 +3,7 @@
 namespace ChangeSet\UnitOfWork;
 
 use ChangeSet\ChangeSet;
+use ChangeSet\Committer\CommitterInterface;
 
 class SimpleUnitOfWork implements UnitOfWorkInterface
 {
@@ -27,8 +28,10 @@ class SimpleUnitOfWork implements UnitOfWorkInterface
         $this->changeSet->remove($object);
     }
 
-    public function commit()
+    public function commit(CommitterInterface $committer)
     {
+        $committer->commit($this->changeSet);
+        
         $this->changeSet = $this->changeSet->clean();
     }
 }

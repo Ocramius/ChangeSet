@@ -10,6 +10,7 @@ use ChangeSet\IdentityMap\IdentityMap;
 use ChangeSet\ChangeSetListener\IdentityMapSynchronizer;
 use ChangeSet\ObjectManager\SimpleObjectManager;
 use ChangeSet\ChangeSet;
+use ChangeSet\Committer\SimpleLoggingCommitter;
 use Zend\EventManager\EventManager;
 
 class ObjectManagerIntegrationTest extends PHPUnit_Framework_TestCase
@@ -22,6 +23,7 @@ class ObjectManagerIntegrationTest extends PHPUnit_Framework_TestCase
     protected $objectLoaderFactory;
     protected $repositoryFactory;
     protected $objectManager;
+    protected $committer;
     public function setUp()
     {
         $this->changeSetEventManager = new EventManager();
@@ -33,6 +35,7 @@ class ObjectManagerIntegrationTest extends PHPUnit_Framework_TestCase
         $this->objectLoaderFactory = new ObjectLoaderFactory($this->unitOfWork);
         $this->repositoryFactory = new ObjectRepositoryFactory($this->unitOfWork, $this->objectLoaderFactory, $this->identityMap);
         $this->objectManager = new SimpleObjectManager($this->repositoryFactory);
+        $this->committer = new SimpleLoggingCommitter();
     }
 
     public function testRepositoryLoad()
@@ -56,6 +59,15 @@ class ObjectManagerIntegrationTest extends PHPUnit_Framework_TestCase
 
         $this->assertNotSame($object, $repository->get(456), 'Loads separate object for a different identifier');
         $this->assertSame($object, $repository->get(123), 'Uses identity map internally');
+        
+        $this->unitOfWork->commit($this->committer);
+        
+        $this->assertEmpty($this->committer->operations);
+        
+        $object->foo = 'changed!';
+        
+        $this->unitOfWork->commit($this->committer);
+        $this->assertCount(1, $this->committer->operations);
     }
 /*
     public function testRepositoryAdd()

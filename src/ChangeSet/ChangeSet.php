@@ -95,11 +95,11 @@ class ChangeSet
         $cleaned->eventManager = $this->eventManager;
 
         foreach ($this->managedInstances as $object) {
-            $cleaned->managedInstances[$object] = $this->managedInstances->offsetGet($object)->getSnapshot();
+            $cleaned->managedInstances[$object] = $this->managedInstances->offsetGet($object)->takeSnapshot();
         }
 
         foreach ($this->newInstances as $object) {
-            $cleaned->managedInstances[$object] = $this->newInstances->offsetGet($object)->getSnapshot();
+            $cleaned->managedInstances[$object] = $this->newInstances->offsetGet($object)->takeSnapshot();
         }
 
         $this->eventManager->trigger(__FUNCTION__, $cleaned, array('previous' => $this));
@@ -131,9 +131,9 @@ class ChangeSet
     {
         $items = array();
 
-        foreach ($this->managedInstances as $removedInstance) {
-            if ($this->managedInstances->offsetGet($removedInstance)->isDirty()) {
-                $items[] = $removedInstance;
+        foreach ($this->managedInstances as $managedInstance) {
+            if ($this->managedInstances->offsetGet($managedInstance)->isDirty()) {
+                $items[] = $managedInstance;
             }
         }
 
