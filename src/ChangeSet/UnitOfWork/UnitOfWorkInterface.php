@@ -8,8 +8,6 @@ interface UnitOfWorkInterface
 	
 	public function registerNew($object);
 	
-	public function registerDirty($object);
-	
 	public function registerRemoved($object);
 	
 	public function commit();

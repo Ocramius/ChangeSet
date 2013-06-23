@@ -22,10 +22,6 @@ class SimpleUnitOfWork implements UnitOfWorkInterface
 		$this->changeSet->add($object);
 	}
 	
-	public function registerDirty($object)
-	{
-	}
-	
 	public function registerRemoved($object)
 	{
 	}
