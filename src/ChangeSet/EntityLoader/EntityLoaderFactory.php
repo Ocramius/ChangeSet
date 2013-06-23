@@ -2,10 +2,18 @@
 
 namespace ChangeSet\EntityLoader;
 
+use ChangeSet\IdentityMap\IdentityMapInterface;
+
 class EntityLoaderFactory
 {
-	public function getEntityLoader()
+	private $identityMap;
+	public function __construct(IdentityMapInterface $identityMap)
 	{
-		return new SimpleEntityLoader();
+		$this->identityMap = $identityMap;
+	}
+	
+	public function getEntityLoader($className)
+	{
+		return new SimpleEntityLoader($this->identityMap);
 	}
 }
