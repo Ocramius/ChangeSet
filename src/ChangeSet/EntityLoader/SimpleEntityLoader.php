@@ -2,7 +2,7 @@
 
 namespace ChangeSet\EntityLoader;
 
-class EntityLoader
+class SimpleEntityLoader implements EntityLoaderInterface
 {
 	private $identityMap;
 	public function __construct()
@@ -12,5 +12,6 @@ class EntityLoader
 	
 	public function load($className, $id)
 	{
+		$this->identityMap->
 	}
 }

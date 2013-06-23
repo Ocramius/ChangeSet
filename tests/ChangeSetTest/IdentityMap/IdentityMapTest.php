@@ -18,12 +18,4 @@ class IdentityMapTest extends PHPUnit_Framework_TestCase
         $identityMap->remove($object);
         $this->assertNull($identityMap->get('stdClass', 'foo'));
     }
-
-    public function testGetId()
-    {
-        $object = new \stdClass();
-        $object->identity = 'foo';
-        $identityMap = new IdentityMap();
-        $this->assertSame('foo', $identityMap->getId($object));
-    }
 }

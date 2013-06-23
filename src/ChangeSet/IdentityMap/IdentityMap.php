@@ -52,12 +52,4 @@ class IdentityMap implements IdentityMapInterface
 		
         return ((null !== $hash) && isset($this->map[$hash])) ? $this->map[$hash] : null;
     }
-
-    public function getId($object)
-    {
-        return $this
-            ->identityExtractorFactory
-            ->getExtractor(get_class($object))
-            ->getIdentity($object);
-    }
 }
