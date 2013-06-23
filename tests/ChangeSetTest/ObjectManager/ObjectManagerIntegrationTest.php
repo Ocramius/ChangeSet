@@ -5,7 +5,7 @@ namespace ChangeSetTest\ObjectManager;
 use PHPUnit_Framework_TestCase;
 use ChangeSet\UnitOfWork\SimpleUnitOfWork;
 use ChangeSet\ObjectRepository\ObjectRepositoryFactory;
-use ChangeSet\EntityLoader\EntityLoaderFactory;
+use ChangeSet\ObjectLoader\ObjectLoaderFactory;
 use ChangeSet\IdentityExtractor\IdentityExtractorFactory;
 use ChangeSet\IdentityMap\IdentityMap;
 use ChangeSet\ObjectManager\SimpleObjectManager;
@@ -19,7 +19,7 @@ class ObjectManagerIntegrationTest extends PHPUnit_Framework_TestCase
 	protected $changeSet;
 	protected $identityMap;
 	protected $unitOfWork;
-	protected $entityLoaderFactory;
+	protected $objectLoaderFactory;
 	protected $repositoryFactory;
 	protected $objectManager;
 	public function setUp()
@@ -28,8 +28,8 @@ class ObjectManagerIntegrationTest extends PHPUnit_Framework_TestCase
 		$this->changeSet = new ChangeSet($this->changeSetEventManager);
 		$this->identityMap = new IdentityMap();
 		$this->unitOfWork = new SimpleUnitOfWork($this->changeSet);
-		$this->entityLoaderFactory = new EntityLoaderFactory($this->identityMap, $this->unitOfWork);
-		$this->repositoryFactory = new ObjectRepositoryFactory($this->unitOfWork, $this->entityLoaderFactory, $this->identityMap);
+		$this->objectLoaderFactory = new ObjectLoaderFactory($this->identityMap, $this->unitOfWork);
+		$this->repositoryFactory = new ObjectRepositoryFactory($this->unitOfWork, $this->objectLoaderFactory, $this->identityMap);
 		$this->objectManager = new SimpleObjectManager($this->repositoryFactory);
 	}
 	

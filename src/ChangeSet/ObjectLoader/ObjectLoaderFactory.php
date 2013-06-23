@@ -1,11 +1,11 @@
 <?php
 
-namespace ChangeSet\EntityLoader;
+namespace ChangeSet\ObjectLoader;
 
 use ChangeSet\IdentityMap\IdentityMapInterface;
 use ChangeSet\UnitOfWork\UnitOfWorkInterface;
 
-class EntityLoaderFactory
+class ObjectLoaderFactory
 {
 	private $identityMap;
 	private $unitOfWork;
@@ -15,8 +15,8 @@ class EntityLoaderFactory
 		$this->unitOfWork = $unitOfWork;
 	}
 	
-	public function getEntityLoader($className)
+	public function getObjectLoader($className)
 	{
-		return new SimpleEntityLoader($this->identityMap, $this->unitOfWork);
+		return new SimpleObjectLoader($this->identityMap, $this->unitOfWork);
 	}
 }

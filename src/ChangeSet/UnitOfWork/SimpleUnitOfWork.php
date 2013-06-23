@@ -29,5 +29,6 @@ class SimpleUnitOfWork implements UnitOfWorkInterface
 	
 	public function commit()
 	{
+		$this->changeSet = $this->changeSet->clean();
 	}
 }

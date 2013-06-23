@@ -3,21 +3,21 @@
 namespace ChangeSet\ObjectRepository;
 
 use ChangeSet\UnitOfWork\UnitOfWorkInterface;
-use ChangeSet\EntityLoader\EntityLoaderInterface;
+use ChangeSet\ObjectLoader\ObjectLoaderInterface;
 use ChangeSet\IdentityMap\IdentityMapInterface;
 
 class SimpleObjectRepository implements ObjectRepositoryInterface
 {
 	protected $unitOfWork;
-	protected $entityLoader;
+	protected $objectLoader;
 	protected $identityMap;
 	public function __construct(
 		UnitOfWorkInterface $unitOfWork, 
-		EntityLoaderInterface $entityLoader,
+		ObjectLoaderInterface $objectLoader,
 		IdentityMapInterface $identityMap
 	) {
 		$this->unitOfWork = $unitOfWork;
-		$this->entityLoader = $entityLoader;
+		$this->objectLoader = $objectLoader;
 		$this->identityMap = $identityMap;
 	}
 	
@@ -52,7 +52,7 @@ class SimpleObjectRepository implements ObjectRepositoryInterface
 			return $object;
 		}
 		
-		$object = $this->entityLoader->loadEntity('stdClass', $id);
+		$object = $this->objectLoader->loadObject('stdClass', $id);
 		
 		$this->identityMap->add($object);
 		

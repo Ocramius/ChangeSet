@@ -3,21 +3,21 @@
 namespace ChangeSet\ObjectRepository;
 
 use ChangeSet\UnitOfWork\UnitOfWorkInterface;
-use ChangeSet\EntityLoader\EntityLoaderFactory;
+use ChangeSet\ObjectLoader\ObjectLoaderFactory;
 use ChangeSet\IdentityMap\IdentityMapInterface;
 
 class ObjectRepositoryFactory
 {
 	private $unitOfWork;
-	private $entityLoaderFactory;
+	private $objectLoaderFactory;
 	private $identityMap;
 	public function __construct(
 		UnitOfWorkInterface $unitOfWork, 
-		EntityLoaderFactory $entityLoaderFactory,
+		ObjectLoaderFactory $objectLoaderFactory,
 		IdentityMapInterface $identityMap
 	) {
 		$this->unitOfWork = $unitOfWork;
-		$this->entityLoaderFactory = $entityLoaderFactory;
+		$this->objectLoaderFactory = $objectLoaderFactory;
 		$this->identityMap = $identityMap;
 	}
 	
@@ -25,7 +25,7 @@ class ObjectRepositoryFactory
 	{
 		return new SimpleObjectRepository(
 			$this->unitOfWork, 
-			$this->entityLoaderFactory->getEntityLoader($className),
+			$this->objectLoaderFactory->getObjectLoader($className),
 			$this->identityMap
 		);
 	}
