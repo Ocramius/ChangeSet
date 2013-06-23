@@ -2,28 +2,20 @@
 
 namespace ChangeSet\ObjectLoader;
 
-use ChangeSet\IdentityMap\IdentityMapInterface;
 use ChangeSet\UnitOfWork\UnitOfWorkInterface;
 
 class SimpleObjectLoader implements ObjectLoaderInterface
 {
-    private $identityMap;
     private $unitOfWork;
-    public function __construct(IdentityMapInterface $identityMap, UnitOfWorkInterface $unitOfWork)
+    public function __construct(UnitOfWorkInterface $unitOfWork)
     {
-        $this->identityMap = $identityMap;
         $this->unitOfWork = $unitOfWork;
     }
 
     public function loadObject($className, $id)
     {
-        if ($object = $this->identityMap->get($className, $id)) {
-            return $object;
-        }
-
         $loaded = $this->doFakeLoading($id);
 
-        $this->identityMap->add($loaded);
         $this->unitOfWork->registerClean($loaded);
 
         return $loaded;
