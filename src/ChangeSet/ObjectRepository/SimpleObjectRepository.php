@@ -58,4 +58,9 @@ class SimpleObjectRepository implements ObjectRepositoryInterface
 		
 		return $object;
 	}
+	
+	public function getReference($id)
+	{
+		return $this->get($id);
+	}
 }

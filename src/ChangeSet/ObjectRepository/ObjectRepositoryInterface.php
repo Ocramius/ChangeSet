@@ -10,5 +10,7 @@ interface ObjectRepositoryInterface
 	
 	public function get($id);
 	
+	public function getReference($id);
+	
 	// @todo Selectable interface here? Maybe not...
 }
