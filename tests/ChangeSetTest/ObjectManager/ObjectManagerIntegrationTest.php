@@ -68,8 +68,10 @@ class ObjectManagerIntegrationTest extends PHPUnit_Framework_TestCase
         
         $this->unitOfWork->commit($this->committer);
         $this->assertCount(1, $this->committer->operations);
+        $this->assertSame('update', $this->committer->operations[0]['type']);
+        $this->assertSame($object, $this->committer->operations[0]['object']);
     }
-/*
+
     public function testRepositoryAdd()
     {
         $listener = $this->getMock('stdClass', array('__invoke'));
@@ -101,6 +103,13 @@ class ObjectManagerIntegrationTest extends PHPUnit_Framework_TestCase
         $repository->add($bar);
 
         $this->assertSame($bar, $repository->get(456));
+        
+        $this->unitOfWork->commit($this->committer);
+        $this->assertCount(2, $this->committer->operations);
+        $this->assertSame('insert', $this->committer->operations[0]['type']);
+        $this->assertSame($foo, $this->committer->operations[0]['object']);
+        $this->assertSame('insert', $this->committer->operations[1]['type']);
+        $this->assertSame($bar, $this->committer->operations[1]['object']);
     }
 
     public function testRepositoryRemove()
@@ -127,5 +136,13 @@ class ObjectManagerIntegrationTest extends PHPUnit_Framework_TestCase
 
         $repository->remove($foo);
         $repository->remove($bar);
-    }*/
+        
+        $this->unitOfWork->commit($this->committer);
+        $this->assertCount(2, $this->committer->operations);
+        $this->assertSame('delete', $this->committer->operations[0]['type']);
+        $this->assertSame($foo, $this->committer->operations[0]['object']);
+        $this->assertSame('delete', $this->committer->operations[1]['type']);
+        $this->assertSame($bar, $this->committer->operations[1]['object']);
+        // @todo not sure delets should already happen here...
+    }
 }
