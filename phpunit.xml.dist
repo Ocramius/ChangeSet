@@ -11,7 +11,7 @@
     backupGlobals="false"
     syntaxCheck="true"
 >
-    <testsuite name="ProxyManager tests">
+    <testsuite name="ChangeSet tests">
         <directory>./tests/ChangeSetTest</directory>
     </testsuite>
     <filter>
