@@ -13,14 +13,14 @@ class ChangeSet
     private $changeGenerator;
     private $eventManager;
 
-    public function __construct(EventManagerInterface $eventManager = null)
+    public function __construct(EventManagerInterface $eventManager)
     {
         $this->newInstances = new \SplObjectStorage();
         $this->managedInstances = new \SplObjectStorage();
         $this->removedInstances = new \SplObjectStorage();
-        $this->changeGenerator  = new ChangeFactory();
+        $this->changeGenerator = new ChangeFactory();
         // @todo a simple map is better (much faster) - using an event manager for now
-        $this->eventManager	    = $eventManager ?: new EventManager();
+        $this->eventManager = $eventManager;
     }
 
     // @todo a map is a data structure, probably shouldn't fire events (fire them in the UoW instead)
@@ -91,7 +91,7 @@ class ChangeSet
 
     public function clean()
     {
-        $cleaned = new self();
+        $cleaned = new self($this->eventManager);
         $cleaned->eventManager = $this->eventManager;
 
         foreach ($this->managedInstances as $object) {
@@ -109,9 +109,7 @@ class ChangeSet
 
     public function clear()
     {
-        $cleared = new static();
-
-        $cleared->eventManager = $this->eventManager;
+        $cleared = new static($this->eventManager);
 
         $this->eventManager->trigger(__FUNCTION__, $cleared, array('previous' => $this));
 

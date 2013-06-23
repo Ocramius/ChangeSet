@@ -3,13 +3,16 @@
 namespace ChangeSet\EntityLoader;
 
 use ChangeSet\IdentityMap\IdentityMapInterface;
+use ChangeSet\UnitOfWork\UnitOfWorkInterface;
 
 class SimpleEntityLoader implements EntityLoaderInterface
 {
 	private $identityMap;
-	public function __construct(IdentityMapInterface $identityMap)
+	private $unitOfWork;
+	public function __construct(IdentityMapInterface $identityMap, UnitOfWorkInterface $unitOfWork)
 	{
 		$this->identityMap = $identityMap;
+		$this->unitOfWork = $unitOfWork;
 	}
 	
 	public function loadEntity($className, $id)
@@ -21,6 +24,7 @@ class SimpleEntityLoader implements EntityLoaderInterface
 		$loaded = $this->doFakeLoading($id);
 		
 		$this->identityMap->add($loaded);
+		$this->unitOfWork->registerClean($loaded);
 		
 		return $loaded;
 	}

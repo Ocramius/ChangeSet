@@ -2,20 +2,24 @@
 
 namespace ChangeSet\UnitOfWork;
 
+use ChangeSet\ChangeSet;
+
 class SimpleUnitOfWork implements UnitOfWorkInterface
 {
-	public function __construct()
+	protected $changeSet;
+	public function __construct(ChangeSet $changeSet)
 	{
-		
+		$this->changeSet = $changeSet;
 	}
 	
 	public function registerClean($object)
 	{
-		
+		$this->changeSet->register($object);
 	}
 	
 	public function registerNew($object)
 	{
+		$this->changeSet->add($object);
 	}
 	
 	public function registerDirty($object)

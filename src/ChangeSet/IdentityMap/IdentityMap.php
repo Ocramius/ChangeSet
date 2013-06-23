@@ -24,8 +24,13 @@ class IdentityMap implements IdentityMapInterface
             ->getEncodedIdentifier($object);
 
         if (null !== $id) {
+			$success = ! isset($this->map[$id]);
 			$this->map[$id] = $object;
+			
+			return $success;
 		}
+		
+		return false;
     }
 
     public function remove($object)
