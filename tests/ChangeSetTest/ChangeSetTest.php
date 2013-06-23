@@ -7,88 +7,91 @@ use PHPUnit_Framework_TestCase;
 
 class ChangeSetTest extends PHPUnit_Framework_TestCase
 {
+    protected $eventManager;
+    protected $changeSet;
+    public function setUp()
+    {
+        $this->eventManager = $this->getMock('Zend\EventManager\EventManagerInterface');
+        $this->changeSet = new ChangeSet($this->eventManager);
+    }
     public function testRegistersNewInstances()
     {
-        $changeSet = new ChangeSet();
         $object = new \stdClass();
 
-        $this->assertEmpty($changeSet->getNew());
+        $this->assertEmpty($this->changeSet->getNew());
 
-        $this->assertFalse($changeSet->isTracking($object));
-        $changeSet->add($object);
-        $this->assertTrue($changeSet->isTracking($object));
+        $this->assertFalse($this->changeSet->isTracking($object));
+        $this->changeSet->add($object);
+        $this->assertTrue($this->changeSet->isTracking($object));
 
-        $this->assertSame(array($object), $changeSet->getNew());
+        $this->assertSame(array($object), $this->changeSet->getNew());
 
-        $changeSet->add($object);
+        $this->changeSet->add($object);
         $this->assertSame(
             array($object),
-            $changeSet->getNew(),
+            $this->changeSet->getNew(),
             'Further "new" registration is ignored'
         );
     }
 
     public function testRegistersManagedInstances()
     {
-        $changeSet = new ChangeSet();
         $object = new \stdClass();
 
-        $this->assertEmpty($changeSet->getChangedManaged());
+        $this->assertEmpty($this->changeSet->getChangedManaged());
 
-        $this->assertFalse($changeSet->isTracking($object));
-        $changeSet->register($object);
-        $this->assertTrue($changeSet->isTracking($object));
+        $this->assertFalse($this->changeSet->isTracking($object));
+        $this->changeSet->register($object);
+        $this->assertTrue($this->changeSet->isTracking($object));
 
-        $this->assertEmpty($changeSet->getChangedManaged());
+        $this->assertEmpty($this->changeSet->getChangedManaged());
 
         $object->foo = 'bar';
 
-        $this->assertSame(array($object), $changeSet->getChangedManaged());
+        $this->assertSame(array($object), $this->changeSet->getChangedManaged());
 
-        $changeSet->register($object);
+        $this->changeSet->register($object);
         $this->assertSame(
             array($object),
-            $changeSet->getChangedManaged(),
+            $this->changeSet->getChangedManaged(),
             'Further "managed" registration is ignored'
         );
     }
 
     public function testRegistersRemovedInstances()
     {
-        $changeSet = new ChangeSet();
         $object = new \stdClass();
 
-        $this->assertEmpty($changeSet->getRemoved());
+        $this->assertEmpty($this->changeSet->getRemoved());
 
-        $this->assertFalse($changeSet->isTracking($object));
-        $changeSet->remove($object);
-        $this->assertTrue($changeSet->isTracking($object));
+        $this->assertFalse($this->changeSet->isTracking($object));
+        $this->changeSet->remove($object);
+        $this->assertTrue($this->changeSet->isTracking($object));
 
-        $this->assertSame(array($object), $changeSet->getRemoved());
+        $this->assertSame(array($object), $this->changeSet->getRemoved());
 
-        $changeSet->remove($object);
+        $this->changeSet->remove($object);
         $this->assertSame(
             array($object),
-            $changeSet->getRemoved(),
+            $this->changeSet->getRemoved(),
             'Further "remove" registration is ignored'
         );
     }
 
     public function testClear()
     {
-        $changeSet = new ChangeSet();
         $new = new \stdClass();
         $managed = new \stdClass();
         $removed = new \stdClass();
 
-        $changeSet->add($new);
-        $changeSet->register($managed);
-        $changeSet->remove($removed);
+        $this->changeSet->add($new);
+        $this->changeSet->register($managed);
+        $this->changeSet->remove($removed);
 
-        $clearedChangeSet = $changeSet->clear();
+        $clearedChangeSet = $this->changeSet->clear();
 
         $this->assertInstanceOf('ChangeSet\\ChangeSet', $clearedChangeSet);
-        $this->assertNotSame($changeSet, $clearedChangeSet);
+        $this->assertNotSame($this->changeSet, $clearedChangeSet);
 
         $this->assertFalse($clearedChangeSet->isTracking($new));
         $this->assertFalse($clearedChangeSet->isTracking($managed));
@@ -97,19 +100,18 @@ class ChangeSetTest extends PHPUnit_Framework_TestCase
 
     public function testClean()
     {
-        $changeSet = new ChangeSet();
         $new = new \stdClass();
         $managed = new \stdClass();
         $removed = new \stdClass();
 
-        $changeSet->add($new);
-        $changeSet->register($managed);
-        $changeSet->remove($removed);
+        $this->changeSet->add($new);
+        $this->changeSet->register($managed);
+        $this->changeSet->remove($removed);
 
-        $cleanedChangeSet = $changeSet->clean();
+        $cleanedChangeSet = $this->changeSet->clean();
 
         $this->assertInstanceOf('ChangeSet\\ChangeSet', $cleanedChangeSet);
-        $this->assertNotSame($changeSet, $cleanedChangeSet);
+        $this->assertNotSame($this->changeSet, $cleanedChangeSet);
 
         $this->assertTrue($cleanedChangeSet->isTracking($new));
         $this->assertTrue($cleanedChangeSet->isTracking($managed));
