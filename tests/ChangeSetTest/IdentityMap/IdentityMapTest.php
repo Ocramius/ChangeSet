@@ -1,8 +1,8 @@
 <?php
 
-namespace ChangeSetTest;
+namespace ChangeSetTest\IdentityMap;
 
-use ChangeSet\IdentityMap;
+use ChangeSet\IdentityMap\IdentityMap;
 use PHPUnit_Framework_TestCase;
 
 class IdentityMapTest extends PHPUnit_Framework_TestCase

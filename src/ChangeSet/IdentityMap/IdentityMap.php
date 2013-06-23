@@ -1,11 +1,11 @@
 <?php
 
-namespace ChangeSet;
+namespace ChangeSet\IdentityMap;
 
 use ChangeSet\IdentityExtractor\IdentityExtractorFactory;
 
 // @todo implement collection interfaces?
-class IdentityMap
+class IdentityMap implements IdentityMapInterface
 {
     private $map = array();
     private $identityExtractorFactory;
@@ -21,9 +21,11 @@ class IdentityMap
         $id = $this
             ->identityExtractorFactory
             ->getExtractor(get_class($object))
-            ->extractIdentityHash($object);
+            ->getEncodedIdentifier($object);
 
-        $this->map[$id] = $object;
+        if (null !== $id) {
+			$this->map[$id] = $object;
+		}
     }
 
     public function remove($object)
@@ -31,8 +33,12 @@ class IdentityMap
         $id = $this
             ->identityExtractorFactory
             ->getExtractor(get_class($object))
-            ->extractIdentityHash($object);
+			->getEncodedIdentifier($object);
 
+        if (null !== $id) {
+			$this->map[$id] = $object;
+		}
+		
         unset($this->map[$id]);
     }
 
@@ -42,9 +48,9 @@ class IdentityMap
         $hash = $this
             ->identityExtractorFactory
             ->getExtractor($className)
-            ->hashIdentifier($id);
-
-        return isset($this->map[$hash]) ? $this->map[$hash] : null;
+            ->encodeIdentifier($id);
+		
+        return ((null !== $hash) && isset($this->map[$hash])) ? $this->map[$hash] : null;
     }
 
     public function getId($object)
@@ -52,6 +58,6 @@ class IdentityMap
         return $this
             ->identityExtractorFactory
             ->getExtractor(get_class($object))
-            ->extractIdentity($object);
+            ->getIdentity($object);
     }
 }

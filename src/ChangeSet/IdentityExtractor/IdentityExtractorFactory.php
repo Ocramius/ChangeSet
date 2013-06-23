@@ -7,6 +7,6 @@ class IdentityExtractorFactory
 {
     public function getExtractor($className)
     {
-        return new FakeIdentityExtractor();
+        return new SimpleIdentityExtractor();
     }
 }
