@@ -5,8 +5,8 @@ namespace ChangeSet;
 // @todo implement collection interfaces?
 class IdentityExtractorFactory
 {
-	public function getExtractor($className)
-	{
-		return new FakeIdentityExtractor();
-	}
+    public function getExtractor($className)
+    {
+        return new FakeIdentityExtractor();
+    }
 }

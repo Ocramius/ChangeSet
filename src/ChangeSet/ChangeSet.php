@@ -2,55 +2,84 @@
 
 namespace ChangeSet;
 
+use Zend\EventManager\EventManager;
+use Zend\EventManager\EventManagerInterface;
+
 class ChangeSet
 {
     private $newInstances;
     private $managedInstances;
     private $removedInstances;
     private $changeGenerator;
+    private $eventManager;
 
-    public function __construct()
+    public function __construct(EventManagerInterface $eventManager = null)
     {
         $this->newInstances = new \SplObjectStorage();
         $this->managedInstances = new \SplObjectStorage();
         $this->removedInstances = new \SplObjectStorage();
         $this->changeGenerator  = new ChangeFactory();
+        // @todo a simple map is better (much faster) - using an event manager for now
+        $this->eventManager	    = $eventManager ?: new EventManager();
     }
 
+    // @todo a map is a data structure, probably shouldn't fire events (fire them in the UoW instead)
     public function add($object)
     {
         if (isset($this->newInstances[$object]) || isset($this->managedInstances[$object])) {
             return;
         }
 
-        unset($this->removedInstances[$object]);
-        $this->newInstances[$object] = $this->changeGenerator->getChange($object);
+        $change = $this->changeGenerator->getChange($object);
 
-        // @todo trigger event here to allow cascades/collections?
+        $this->eventManager->trigger(
+            __FUNCTION__,
+            $this,
+            array('object' => $object, 'change' => $change)
+        );
+
+        unset($this->removedInstances[$object]);
+        $this->newInstances[$object] = $change;
     }
 
+    // @todo a map is a data structure, probably shouldn't fire events (fire them in the UoW instead)
     public function register($object)
     {
         if (isset($this->managedInstances[$object])) {
             return;
         }
 
-        unset($this->newInstances[$object], $this->removedInstances[$object]);
-        $this->managedInstances[$object] = $this->changeGenerator->getChange($object)->takeSnapshot();
+        $change = $this->changeGenerator->getChange($object)->takeSnapshot();
 
-        // @todo trigger event here to allow cascades/collections?
+        $this->eventManager->trigger(
+            __FUNCTION__,
+            $this,
+            array('object' => $object, 'change' => $change)
+        );
+
+        unset($this->newInstances[$object], $this->removedInstances[$object]);
+        $this->managedInstances[$object] = $change;
     }
 
+    // @todo a map is a data structure, probably shouldn't fire events (fire them in the UoW instead)
     public function remove($object)
     {
         if (isset($this->removedInstances[$object])) {
             return;
         }
 
-        unset($this->newInstances[$object], $this->managedInstances[$object]);
-        $this->removedInstances[$object] = $this->changeGenerator->getChange($object);
+        $change = $this->changeGenerator->getChange($object)->takeSnapshot();
 
-        // @todo trigger event here to allow cascades/collections?
+        $this->eventManager->trigger(
+            __FUNCTION__,
+            $this,
+            array('object' => $object, 'change' => $change)
+        );
+
+        unset($this->newInstances[$object], $this->managedInstances[$object]);
+        // @todo if a new instance is found, should we schedule this one for removal or just
+        // remove it from newInstances?
+        $this->removedInstances[$object] = $change;
     }
 
     public function isTracking($object)
@@ -63,6 +92,7 @@ class ChangeSet
     public function clean()
     {
         $cleaned = new self();
+        $cleaned->eventManager = $this->eventManager;
 
         foreach ($this->managedInstances as $object) {
             $cleaned->managedInstances[$object] = $this->managedInstances->offsetGet($object)->getSnapshot();
@@ -72,12 +102,20 @@ class ChangeSet
             $cleaned->managedInstances[$object] = $this->newInstances->offsetGet($object)->getSnapshot();
         }
 
+        $this->eventManager->trigger(__FUNCTION__, $cleaned, array('previous' => $this));
+
         return $cleaned;
     }
 
     public function clear()
     {
-        return new static();
+        $cleared = new static();
+
+        $cleared->eventManager = $this->eventManager;
+
+        $this->eventManager->trigger(__FUNCTION__, $cleared, array('previous' => $this));
+
+        return $cleared;
     }
 
     public function getNew()
@@ -113,5 +151,15 @@ class ChangeSet
         }
 
         return $items;
+    }
+
+    public function takeSnapshot()
+    {
+        // @todo implement immutable snapshot
+    }
+
+    public function rollback()
+    {
+        // @todo implement rollback
     }
 }
