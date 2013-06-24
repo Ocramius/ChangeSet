@@ -3,7 +3,6 @@
 namespace ChangeSet\Committer;
 
 use ChangeSet\ChangeSet;
-use ChangeSet\Change;
 
 class SimpleLoggingCommitter implements CommitterInterface
 {

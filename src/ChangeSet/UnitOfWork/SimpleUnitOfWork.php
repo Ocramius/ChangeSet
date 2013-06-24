@@ -8,6 +8,7 @@ use ChangeSet\Committer\CommitterInterface;
 class SimpleUnitOfWork implements UnitOfWorkInterface
 {
     protected $changeSet;
+
     public function __construct(ChangeSet $changeSet)
     {
         $this->changeSet = $changeSet;
@@ -31,7 +32,7 @@ class SimpleUnitOfWork implements UnitOfWorkInterface
     public function commit(CommitterInterface $committer)
     {
         $committer->commit($this->changeSet);
-        
+
         $this->changeSet = $this->changeSet->clean();
     }
 }
