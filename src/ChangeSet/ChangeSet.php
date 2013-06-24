@@ -2,7 +2,6 @@
 
 namespace ChangeSet;
 
-use Zend\EventManager\EventManager;
 use Zend\EventManager\EventManagerInterface;
 
 class ChangeSet
