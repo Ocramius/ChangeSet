@@ -7,6 +7,7 @@ use ChangeSet\UnitOfWork\UnitOfWorkInterface;
 class SimpleObjectLoader implements ObjectLoaderInterface
 {
     private $unitOfWork;
+
     public function __construct(UnitOfWorkInterface $unitOfWork)
     {
         $this->unitOfWork = $unitOfWork;

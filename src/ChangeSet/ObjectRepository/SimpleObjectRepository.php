@@ -2,25 +2,9 @@
 
 namespace ChangeSet\ObjectRepository;
 
-use ChangeSet\UnitOfWork\UnitOfWorkInterface;
-use ChangeSet\ObjectLoader\ObjectLoaderInterface;
-use ChangeSet\IdentityMap\IdentityMapInterface;
 
-class SimpleObjectRepository implements ObjectRepositoryInterface
+class SimpleObjectRepository extends ObjectRepository implements ObjectRepositoryInterface
 {
-    protected $unitOfWork;
-    protected $objectLoader;
-    protected $identityMap;
-    public function __construct(
-        UnitOfWorkInterface $unitOfWork,
-        ObjectLoaderInterface $objectLoader,
-        IdentityMapInterface $identityMap
-    ) {
-        $this->unitOfWork = $unitOfWork;
-        $this->objectLoader = $objectLoader;
-        $this->identityMap = $identityMap;
-    }
-
     public function add($object)
     {
         $this->unitOfWork->registerNew($object);

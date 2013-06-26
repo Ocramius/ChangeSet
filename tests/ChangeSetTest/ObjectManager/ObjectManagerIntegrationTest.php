@@ -3,50 +3,96 @@
 namespace ChangeSetTest\ObjectManager;
 
 use PHPUnit_Framework_TestCase;
+use Zend\EventManager\EventManager;
+use ChangeSet\IdentityExtractor\IdentityExtractorFactory;
+use ChangeSet\ObjectRepository\RepositoryFactory;
+use ChangeSet\IdentityExtractor\SimpleIdentityExtractor;
+use ChangeSet\ObjectLoader\SimpleObjectLoader;
+use ChangeSet\ObjectRepository\SimpleObjectRepository;
 use ChangeSet\UnitOfWork\SimpleUnitOfWork;
-use ChangeSet\ObjectRepository\ObjectRepositoryFactory;
-use ChangeSet\ObjectLoader\ObjectLoaderFactory;
 use ChangeSet\IdentityMap\IdentityMap;
 use ChangeSet\ChangeSetListener\IdentityMapSynchronizer;
 use ChangeSet\ObjectManager\SimpleObjectManager;
 use ChangeSet\ChangeSet;
 use ChangeSet\Committer\SimpleLoggingCommitter;
-use Zend\EventManager\EventManager;
+use ChangeSet\Container\Container;
 
 class ObjectManagerIntegrationTest extends PHPUnit_Framework_TestCase
 {
-    protected $changeSetEventManager;
-    protected $changeSet;
-    protected $identityMap;
-    protected $identityMapSynchronizer;
-    protected $unitOfWork;
-    protected $objectLoaderFactory;
-    protected $repositoryFactory;
-    protected $objectManager;
-    protected $committer;
+    protected $container;
+
     public function setUp()
     {
-        $this->changeSetEventManager = new EventManager();
-        $this->changeSet = new ChangeSet($this->changeSetEventManager);
-        $this->identityMap = new IdentityMap();
-        $this->identityMapSynchronizer = new IdentityMapSynchronizer($this->identityMap);
-        $this->changeSetEventManager->attach($this->identityMapSynchronizer);
-        $this->unitOfWork = new SimpleUnitOfWork($this->changeSet);
-        $this->objectLoaderFactory = new ObjectLoaderFactory($this->unitOfWork);
-        $this->repositoryFactory = new ObjectRepositoryFactory($this->unitOfWork, $this->objectLoaderFactory, $this->identityMap);
-        $this->objectManager = new SimpleObjectManager($this->repositoryFactory);
-        $this->committer = new SimpleLoggingCommitter();
+        $cnt = new Container();
+        $cnt['event_manager'] = $cnt->share(function ($c) {
+            return new EventManager();
+        });
+
+        $cnt['changeset'] = $cnt->share(function ($c) {
+            return  new ChangeSet($c['event_manager']);
+        });
+
+        $cnt['identity_extractor'] = $cnt->share(function ($c) {
+            $p = new IdentityExtractorFactory();
+            $p['stdClass'] = $p->share(function ($c) {
+                return new SimpleIdentityExtractor();
+            });
+            return $p;
+        });
+
+        $cnt['identity_map'] = $cnt->share(function ($c) {
+            return new IdentityMap($c['identity_extractor']);
+        });
+
+        $cnt['identity_map_synchronizer'] = $cnt->share(function ($c) {
+            return new IdentityMapSynchronizer($c['identity_map']);
+        });
+
+        $cnt['event_manager']->attach($cnt['identity_map_synchronizer']);
+
+        $cnt['unit_of_work'] = $cnt->share(function ($c) {
+            return new SimpleUnitOfWork($c['changeset']);
+        });
+
+        $cnt['simple_object_loader'] = $cnt->share(function ($c) {
+            return new SimpleObjectLoader($c['unit_of_work']);
+        });
+
+        $cnt['repository_factory'] = $cnt->share(function ($c) {
+            $p = new RepositoryFactory();
+            $p['stdClass'] = $p->share(function ($p) use ($c) {
+                return new SimpleObjectRepository(
+                    $c['unit_of_work'],
+                    $c['simple_object_loader'],
+                    $c['identity_map'],
+                    'stdClass'
+                );
+            });
+            return $p;
+        });
+
+        $cnt['object_manager'] = $cnt->share(function ($c) {
+            return new SimpleObjectManager($c['repository_factory']);
+        });
+
+        $cnt['committer'] = $cnt->share(function ($c) {
+            return new SimpleLoggingCommitter();
+        });
+
+        $this->container = $cnt;
     }
 
     public function testRepositoryLoad()
     {
+        $cnt = $this->container;
+
         $listener = $this->getMock('stdClass', array('__invoke'));
 
         $listener->expects($this->exactly(2))->method('__invoke');
-        $this->changeSetEventManager->attach('register', $listener);
+        $cnt["event_manager"]->attach('register', $listener);
 
         // @todo should repositories be fetched somhow differently? Maybe force per-hand instantiation?
-        $repository = $this->objectManager->getRepository('stdClass');
+        $repository = $cnt['object_manager']->getRepository('stdClass');
 
         $this->assertInstanceOf('ChangeSet\\ObjectRepository\\ObjectRepositoryInterface', $repository);
 
@@ -60,28 +106,30 @@ class ObjectManagerIntegrationTest extends PHPUnit_Framework_TestCase
         $this->assertNotSame($object, $repository->get(456), 'Loads separate object for a different identifier');
         $this->assertSame($object, $repository->get(123), 'Uses identity map internally');
         
-        $this->unitOfWork->commit($this->committer);
+        $cnt["unit_of_work"]->commit($cnt['committer']);
         
-        $this->assertEmpty($this->committer->operations);
+        $this->assertEmpty($cnt['committer']->operations);
         
         $object->foo = 'changed!';
         
-        $this->unitOfWork->commit($this->committer);
-        $this->assertCount(1, $this->committer->operations);
-        $this->assertSame('update', $this->committer->operations[0]['type']);
-        $this->assertSame($object, $this->committer->operations[0]['object']);
+        $cnt["unit_of_work"]->commit($cnt['committer']);
+        $this->assertCount(1, $cnt['committer']->operations);
+        $this->assertSame('update', $cnt['committer']->operations[0]['type']);
+        $this->assertSame($object, $cnt['committer']->operations[0]['object']);
     }
 
     public function testRepositoryAdd()
     {
+        $cnt = $this->container;
+
         $listener = $this->getMock('stdClass', array('__invoke'));
 
         $listener->expects($this->exactly(2))->method('__invoke');
 
-        $this->changeSetEventManager->attach('add', $listener);
+        $cnt["event_manager"]->attach('add', $listener);
 
         // @todo should repositories be fetched somhow differently? Maybe force per-hand instantiation?
-        $repository = $this->objectManager->getRepository('stdClass');
+        $repository = $cnt['object_manager']->getRepository('stdClass');
 
         $this->assertInstanceOf('ChangeSet\\ObjectRepository\\ObjectRepositoryInterface', $repository);
 
@@ -104,24 +152,26 @@ class ObjectManagerIntegrationTest extends PHPUnit_Framework_TestCase
 
         $this->assertSame($bar, $repository->get(456));
         
-        $this->unitOfWork->commit($this->committer);
-        $this->assertCount(2, $this->committer->operations);
-        $this->assertSame('insert', $this->committer->operations[0]['type']);
-        $this->assertSame($foo, $this->committer->operations[0]['object']);
-        $this->assertSame('insert', $this->committer->operations[1]['type']);
-        $this->assertSame($bar, $this->committer->operations[1]['object']);
+        $cnt["unit_of_work"]->commit($cnt['committer']);
+        $this->assertCount(2, $cnt['committer']->operations);
+        $this->assertSame('insert', $cnt['committer']->operations[0]['type']);
+        $this->assertSame($foo, $cnt['committer']->operations[0]['object']);
+        $this->assertSame('insert', $cnt['committer']->operations[1]['type']);
+        $this->assertSame($bar, $cnt['committer']->operations[1]['object']);
     }
 
     public function testRepositoryRemove()
     {
+        $cnt = $this->container;
+
         $listener = $this->getMock('stdClass', array('__invoke'));
 
         $listener->expects($this->exactly(2))->method('__invoke');
 
-        $this->changeSetEventManager->attach('remove', $listener);
+        $cnt["event_manager"]->attach('remove', $listener);
 
         // @todo should repositories be fetched somhow differently? Maybe force per-hand instantiation?
-        $repository = $this->objectManager->getRepository('stdClass');
+        $repository = $cnt['object_manager']->getRepository('stdClass');
 
         $this->assertInstanceOf('ChangeSet\\ObjectRepository\\ObjectRepositoryInterface', $repository);
 
@@ -137,12 +187,12 @@ class ObjectManagerIntegrationTest extends PHPUnit_Framework_TestCase
         $repository->remove($foo);
         $repository->remove($bar);
         
-        $this->unitOfWork->commit($this->committer);
-        $this->assertCount(2, $this->committer->operations);
-        $this->assertSame('delete', $this->committer->operations[0]['type']);
-        $this->assertSame($foo, $this->committer->operations[0]['object']);
-        $this->assertSame('delete', $this->committer->operations[1]['type']);
-        $this->assertSame($bar, $this->committer->operations[1]['object']);
+        $cnt["unit_of_work"]->commit($cnt['committer']);
+        $this->assertCount(2, $cnt['committer']->operations);
+        $this->assertSame('delete', $cnt['committer']->operations[0]['type']);
+        $this->assertSame($foo, $cnt['committer']->operations[0]['object']);
+        $this->assertSame('delete', $cnt['committer']->operations[1]['type']);
+        $this->assertSame($bar, $cnt['committer']->operations[1]['object']);
         // @todo not sure delets should already happen here...
     }
 }

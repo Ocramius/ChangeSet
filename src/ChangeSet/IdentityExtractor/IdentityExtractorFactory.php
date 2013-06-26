@@ -2,11 +2,13 @@
 
 namespace ChangeSet\IdentityExtractor;
 
-// @todo implement collection interfaces?
-class IdentityExtractorFactory
+use ChangeSet\Container\Container;
+
+class IdentityExtractorFactory extends Container implements IdentityExtractorFactoryInterface
 {
+
     public function getExtractor($className)
     {
-        return new SimpleIdentityExtractor();
+        return $this[$className];
     }
 }
