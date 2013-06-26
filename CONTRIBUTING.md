@@ -18,7 +18,7 @@ You will then need to run a composer installation:
 ```sh
 cd ChangeSet
 curl -s https://getcomposer.org/installer | php
-php composer.phar update --dev
+php composer.phar update
 ```
 
 ## Testing
