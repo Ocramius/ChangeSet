@@ -2,20 +2,20 @@
 
 namespace ChangeSet\ObjectManager;
 
-use ChangeSet\ObjectRepository\ObjectRepositoryFactory;
+use ChangeSet\ObjectRepository\RepositoryFactoryInterface;
 
 class SimpleObjectManager implements ObjectManagerInterface
 {
-    protected $objectRepositoryFactory;
+    protected $repositoryFactory;
 
-    public function __construct(ObjectRepositoryFactory $objectRepositoryFactory)
+    public function __construct(RepositoryFactoryInterface $objectRepositoryFactory)
     {
-        $this->objectRepositoryFactory = $objectRepositoryFactory;
+        $this->repositoryFactory = $objectRepositoryFactory;
     }
 
     public function getRepository($className)
     {
-        return $this->objectRepositoryFactory->getObjectRepository($className);
+        return $this->repositoryFactory->getObjectRepository($className);
     }
 
     public function flush()
