@@ -2,7 +2,7 @@
 
 namespace ChangeSet\IdentityMap;
 
-use ChangeSet\IdentityExtractor\IdentityExtractorFactory;
+use ChangeSet\IdentityExtractor\IdentityExtractorFactoryInterface;
 use SplObjectStorage;
 
 // @todo implement collection interfaces?
@@ -12,9 +12,9 @@ class IdentityMap implements IdentityMapInterface
     private $objects;
     private $identityExtractorFactory;
 
-    public function __construct()
+    public function __construct(IdentityExtractorFactoryInterface $IdentityExtractorFactory)
     {
-        $this->identityExtractorFactory = new IdentityExtractorFactory();
+        $this->identityExtractorFactory = $IdentityExtractorFactory;
         $this->objects = new SplObjectStorage();
     }
 
@@ -27,7 +27,7 @@ class IdentityMap implements IdentityMapInterface
             ->getEncodedIdentifier($object);
 
         if (null !== $id) {
-            $success = ! isset($this->map[$id]);
+            $success = !isset($this->map[$id]);
             $this->map[$id] = $object;
             $this->objects[$object] = $id;
 
@@ -39,7 +39,7 @@ class IdentityMap implements IdentityMapInterface
 
     public function remove($object)
     {
-        if (! isset($this->objects[$object])) {
+        if (!isset($this->objects[$object])) {
             return false;
         }
 
@@ -50,7 +50,6 @@ class IdentityMap implements IdentityMapInterface
 
     public function get($className, $id)
     {
-        // @todo reuse the identity extractor here!
         $hash = $this
             ->identityExtractorFactory
             ->getExtractor($className)

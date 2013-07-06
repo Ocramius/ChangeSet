@@ -84,8 +84,8 @@ class ChangeSet
     public function isTracking($object)
     {
         return isset($this->managedInstances[$object])
-            || isset($this->newInstances[$object])
-            || isset($this->removedInstances[$object]); // maybe should not check this?
+        || isset($this->newInstances[$object])
+        || isset($this->removedInstances[$object]); // maybe should not check this?
     }
 
     public function clean()

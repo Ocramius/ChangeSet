@@ -6,6 +6,7 @@ class Change
 {
     private $object;
     private $snapshot;
+
     public function __construct($object, $compute = false)
     {
         $this->object = $object;
