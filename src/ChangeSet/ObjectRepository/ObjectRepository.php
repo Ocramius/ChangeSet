@@ -19,8 +19,7 @@ abstract class ObjectRepository implements ObjectRepositoryInterface
         ObjectLoaderInterface $objectLoader,
         IdentityMapInterface $identityMap,
         $entityClassName
-    )
-    {
+    ) {
         $this->unitOfWork = $unitOfWork;
         $this->objectLoader = $objectLoader;
         $this->identityMap = $identityMap;

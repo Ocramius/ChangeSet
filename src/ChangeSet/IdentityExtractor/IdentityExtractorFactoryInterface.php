@@ -2,7 +2,7 @@
 
 namespace ChangeSet\IdentityExtractor;
 
-Interface IdentityExtractorFactoryInterface
+interface IdentityExtractorFactoryInterface
 {
 
     public function getExtractor($className);

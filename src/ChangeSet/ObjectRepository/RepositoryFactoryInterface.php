@@ -2,7 +2,7 @@
 
 namespace ChangeSet\ObjectRepository;
 
-Interface RepositoryFactoryInterface
+interface RepositoryFactoryInterface
 {
 
     public function getObjectRepository($className);
