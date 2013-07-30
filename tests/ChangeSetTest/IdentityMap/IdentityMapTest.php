@@ -12,8 +12,8 @@ class IdentityMapTest extends PHPUnit_Framework_TestCase
 {
     private $extractorFactory;
 
-    public function setUp() {
-
+    public function setUp()
+    {
         $this->extractorFactory = $this->getMock('ChangeSet\IdentityExtractor\IdentityExtractorFactoryInterface');
     }
 
@@ -22,7 +22,9 @@ class IdentityMapTest extends PHPUnit_Framework_TestCase
         $object = new \stdClass();
         $object->identity = 'foo';
 
-        $this->extractorFactory->expects($this->any())
+        $this
+            ->extractorFactory
+            ->expects($this->any())
             ->method('getExtractor')
             ->with('stdClass')
             ->will($this->returnValue(new SimpleIdentityExtractor()));
