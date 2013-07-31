@@ -183,14 +183,4 @@ class ChangeMap
     {
         return array_values($this->removedInstances);
     }
-
-    public function takeSnapshot()
-    {
-        // @todo implement immutable snapshot
-    }
-
-    public function rollback()
-    {
-        // @todo implement rollback
-    }
 }
