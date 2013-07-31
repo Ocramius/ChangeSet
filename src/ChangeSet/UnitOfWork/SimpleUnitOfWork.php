@@ -2,14 +2,14 @@
 
 namespace ChangeSet\UnitOfWork;
 
-use ChangeSet\ChangeSet;
+use ChangeSet\ChangeTracking\ChangeMap;
 use ChangeSet\Committer\CommitterInterface;
 
 class SimpleUnitOfWork implements UnitOfWorkInterface
 {
     protected $changeSet;
 
-    public function __construct(ChangeSet $changeSet)
+    public function __construct(ChangeMap $changeSet)
     {
         $this->changeSet = $changeSet;
     }

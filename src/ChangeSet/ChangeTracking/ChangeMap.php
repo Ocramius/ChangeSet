@@ -164,11 +164,17 @@ class ChangeMap
         return $cleared;
     }
 
+    /**
+     * @return Change[]
+     */
     public function getNew()
     {
         return array_values($this->newInstances);
     }
 
+    /**
+     * @return Change[]
+     */
     public function getChangedManaged()
     {
         return array_filter(
@@ -179,6 +185,9 @@ class ChangeMap
         );
     }
 
+    /**
+     * @return Change[]
+     */
     public function getRemoved()
     {
         return array_values($this->removedInstances);
