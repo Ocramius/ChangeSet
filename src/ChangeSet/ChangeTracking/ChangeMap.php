@@ -40,7 +40,6 @@ class ChangeMap
         $this->changeGenerator = new ChangeFactory();
     }
 
-    // @todo a map is a data structure, probably shouldn't fire events (fire them in the UoW instead)
     public function add($object)
     {
         $hash = spl_object_hash($object);
@@ -58,7 +57,6 @@ class ChangeMap
         return $change;
     }
 
-    // @todo a map is a data structure, probably shouldn't fire events (fire them in the UoW instead)
     public function register($object)
     {
         $hash = spl_object_hash($object);
@@ -76,7 +74,6 @@ class ChangeMap
         return $change;
     }
 
-    // @todo a map is a data structure, probably shouldn't fire events (fire them in the UoW instead)
     public function remove($object)
     {
         $hash = spl_object_hash($object);
