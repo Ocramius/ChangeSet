@@ -16,9 +16,9 @@ class IdentityMapSynchronizer extends AbstractListenerAggregate
 
     public function attach(EventManagerInterface $eventManager)
     {
-        $this->listeners[] = $eventManager->attach('add', array($this, 'addToIdentityMap'));
-        $this->listeners[] = $eventManager->attach('register', array($this, 'addToIdentityMap'));
-        $this->listeners[] = $eventManager->attach('remove', array($this, 'removeFromIdentityMap'));
+        $this->listeners[] = $eventManager->attach('registerNew', array($this, 'addToIdentityMap'));
+        $this->listeners[] = $eventManager->attach('registerClean', array($this, 'addToIdentityMap'));
+        $this->listeners[] = $eventManager->attach('registerRemoved', array($this, 'removeFromIdentityMap'));
     }
 
     public function addToIdentityMap(EventInterface $event)

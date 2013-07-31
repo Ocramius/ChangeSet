@@ -9,18 +9,16 @@ use stdClass;
 class ChangeMapTest extends PHPUnit_Framework_TestCase
 {
     /**
-     * @var \Zend\EventManager\EventManagerInterface|\PHPUnit_Framework_MockObject_MockObject
-     */
-    protected $eventManager;
-
-    /**
      * @var ChangeMap
      */
     protected $changeSet;
+
+    /**
+     * {@inheritDoc}
+     */
     public function setUp()
     {
-        $this->eventManager = $this->getMock('Zend\EventManager\EventManagerInterface');
-        $this->changeSet    = new ChangeMap($this->eventManager);
+        $this->changeSet    = new ChangeMap();
     }
 
     public function testRegistersNewInstances()
@@ -30,7 +28,7 @@ class ChangeMapTest extends PHPUnit_Framework_TestCase
         $this->assertEmpty($this->changeSet->getNew());
 
         $this->assertFalse($this->changeSet->isTracking($object));
-        $this->changeSet->add($object);
+        $this->assertInstanceOf('ChangeSet\Change', $this->changeSet->add($object));
         $this->assertTrue($this->changeSet->isTracking($object));
 
         $new = $this->changeSet->getNew();
@@ -41,7 +39,6 @@ class ChangeMapTest extends PHPUnit_Framework_TestCase
 
         /* @var $new \ChangeSet\Change */
         $this->assertInstanceOf('ChangeSet\Change', $new);
-
         $this->assertSame($object, $new->getObject(), 'The object was correctly marked as "new"');
     }
 
@@ -49,9 +46,8 @@ class ChangeMapTest extends PHPUnit_Framework_TestCase
     {
         $object = new stdClass();
 
-        $this->changeSet->add($object);
-        $this->changeSet->add($object);
-
+        $this->assertInstanceOf('ChangeSet\Change', $this->changeSet->add($object));
+        $this->assertNull($this->changeSet->add($object));
         $this->assertCount(1, $this->changeSet->getNew(), 'Further "new" registration is ignored');
     }
 
@@ -62,7 +58,7 @@ class ChangeMapTest extends PHPUnit_Framework_TestCase
         $this->assertEmpty($this->changeSet->getChangedManaged());
 
         $this->assertFalse($this->changeSet->isTracking($object));
-        $this->changeSet->register($object);
+        $this->assertInstanceOf('ChangeSet\Change', $this->changeSet->register($object));
         $this->assertTrue($this->changeSet->isTracking($object));
 
         $this->assertEmpty($this->changeSet->getChangedManaged());
@@ -77,7 +73,6 @@ class ChangeMapTest extends PHPUnit_Framework_TestCase
 
         /* @var $managed \ChangeSet\Change */
         $this->assertInstanceOf('ChangeSet\Change', $managed);
-
         $this->assertSame($object, $managed->getObject(), 'The object is being tracked correctly as "changed"');
     }
 
@@ -85,12 +80,11 @@ class ChangeMapTest extends PHPUnit_Framework_TestCase
     {
         $object = new stdClass();
 
-        $this->changeSet->register($object);
+        $this->assertInstanceOf('ChangeSet\Change', $this->changeSet->register($object));
 
         $object->foo = 'bar';
 
-        $this->changeSet->register($object);
-
+        $this->assertNull($this->changeSet->register($object));
         $this->assertCount(
             1,
             $this->changeSet->getChangedManaged(),
@@ -105,7 +99,7 @@ class ChangeMapTest extends PHPUnit_Framework_TestCase
         $this->assertEmpty($this->changeSet->getRemoved());
 
         $this->assertFalse($this->changeSet->isTracking($object));
-        $this->changeSet->remove($object);
+        $this->assertInstanceOf('ChangeSet\Change', $this->changeSet->remove($object));
         $this->assertTrue($this->changeSet->isTracking($object));
 
         $removed = $this->changeSet->getRemoved();
@@ -116,7 +110,6 @@ class ChangeMapTest extends PHPUnit_Framework_TestCase
 
         /* @var $removed \ChangeSet\Change */
         $this->assertInstanceOf('ChangeSet\Change', $removed);
-
         $this->assertSame($object, $removed->getObject(), 'The object is being tracked correctly as "removed"');
     }
 
@@ -124,8 +117,8 @@ class ChangeMapTest extends PHPUnit_Framework_TestCase
     {
         $object = new stdClass();
 
-        $this->changeSet->remove($object);
-        $this->changeSet->remove($object);
+        $this->assertInstanceOf('ChangeSet\Change', $this->changeSet->remove($object));
+        $this->assertNull($this->changeSet->remove($object));
 
         $this->assertCount(1, $this->changeSet->getRemoved(), 'Further duplicate removed instances are ignored');
     }

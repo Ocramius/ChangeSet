@@ -35,16 +35,9 @@ class ChangeMap
      */
     private $changeGenerator;
 
-    /**
-     * @var EventManagerInterface
-     */
-    private $eventManager;
-
-    public function __construct(EventManagerInterface $eventManager)
+    public function __construct()
     {
         $this->changeGenerator = new ChangeFactory();
-        // @todo a simple map is better (much faster) - using an event manager for now
-        $this->eventManager    = $eventManager;
     }
 
     // @todo a map is a data structure, probably shouldn't fire events (fire them in the UoW instead)
@@ -53,24 +46,16 @@ class ChangeMap
         $hash = spl_object_hash($object);
 
         if (isset($this->newInstances[$hash]) || isset($this->managedInstances[$hash])) {
-            return;
+            return null;
         }
 
         $change = $this->changeGenerator->getChange($object);
 
-        $this->eventManager->trigger(
-            __FUNCTION__,
-            $this,
-            [
-                 'hash'   => $hash,
-                 'object' => $object,
-                 'change' => $change,
-            ]
-        );
-
         unset($this->removedInstances[$hash]);
 
         $this->newInstances[$hash] = $change;
+
+        return $change;
     }
 
     // @todo a map is a data structure, probably shouldn't fire events (fire them in the UoW instead)
@@ -79,24 +64,16 @@ class ChangeMap
         $hash = spl_object_hash($object);
 
         if (isset($this->managedInstances[$hash])) {
-            return;
+            return null;
         }
 
         $change = $this->changeGenerator->getChange($object)->takeSnapshot();
 
-        $this->eventManager->trigger(
-            __FUNCTION__,
-            $this,
-            [
-                'hash'   => $hash,
-                'object' => $object,
-                'change' => $change,
-            ]
-        );
-
         unset($this->newInstances[$hash], $this->removedInstances[$hash]);
 
         $this->managedInstances[$hash] = $change;
+
+        return $change;
     }
 
     // @todo a map is a data structure, probably shouldn't fire events (fire them in the UoW instead)
@@ -105,26 +82,18 @@ class ChangeMap
         $hash = spl_object_hash($object);
 
         if (isset($this->removedInstances[$hash])) {
-            return;
+            return null;
         }
 
         $change = $this->changeGenerator->getChange($object)->takeSnapshot();
-
-        $this->eventManager->trigger(
-            __FUNCTION__,
-            $this,
-            [
-                'hash'   => $hash,
-                'object' => $object,
-                'change' => $change,
-            ]
-        );
 
         unset($this->newInstances[$hash], $this->managedInstances[$hash]);
 
         // @todo if a new instance is found, should we schedule this one for removal or just
         // remove it from newInstances?
         $this->removedInstances[$hash] = $change;
+
+        return $change;
     }
 
     public function isTracking($object)
@@ -138,9 +107,7 @@ class ChangeMap
 
     public function clean()
     {
-        $cleaned = new self($this->eventManager);
-
-        $cleaned->eventManager = $this->eventManager;
+        $cleaned = new self();
 
         foreach ($this->managedInstances as $hash => $change) {
             $cleaned->managedInstances[$hash] = $change->takeSnapshot();
@@ -150,16 +117,12 @@ class ChangeMap
             $cleaned->managedInstances[$hash] = $change->takeSnapshot();
         }
 
-        $this->eventManager->trigger(__FUNCTION__, $cleaned, array('previous' => $this));
-
         return $cleaned;
     }
 
     public function clear()
     {
-        $cleared = new static($this->eventManager);
-
-        $this->eventManager->trigger(__FUNCTION__, $cleared, array('previous' => $this));
+        $cleared = new static();
 
         return $cleared;
     }
