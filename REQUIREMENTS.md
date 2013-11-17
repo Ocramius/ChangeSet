@@ -16,7 +16,7 @@ Here's a list of the requirements that this library should fulfill:
     - be fully cloneable
     - not have dependencies to services
     - be comparable to the tracked `object` state `null|Snapshot Snapshot#compare(SnapshotManager $snapshotManager)`
-    - be able to produce new snapshots of itself (`Snapshot Snapshot#freeze(SnapshotCreator $snapshotCreator)`)
+    - be able to produce new snapshots of itself (`Snapshot Snapshot#freeze(SnapshotManager $snapshotManager)`)
 
  - It must provide a simple `ChangeSet` that allows tracking object state (already implemented so far)
     - addition of `object`s
