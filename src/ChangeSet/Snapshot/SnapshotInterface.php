@@ -36,7 +36,7 @@ interface SnapshotInterface extends Serializable
      *
      * @param SnapshotManagerInterface $snapshotManager
      *
-     * @return null|Snapshot
+     * @return null|SnapshotInterface
      */
     public function compare(SnapshotManagerInterface $snapshotManager);
 
