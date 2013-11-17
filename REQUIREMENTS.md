@@ -12,13 +12,14 @@ Here's a list of the requirements that this library should fulfill:
     - be immutable
     - be fully cloneable
     - not have dependencies to services
-    - be comparable to the tracked `object` state via `null|array Snapshot#compare(ObjectComparator $comparator)`
+    - be comparable to the tracked `object` state via `null|Snapshot Snapshot#compare(ObjectComparator $comparator)`
     - be able to produce new snapshots of itself (`Snapshot Snapshot#freeze(SnapshotCreator $snapshotCreator)`)
 
  - MUST provide a simple interface for comparing generic `object`s
     - comparison should be allowed via either *value* or *identity*, depending on user needs
     - `array ObjectComparator#compare($object1, $object2)`
-    - `null|array ObjectComparator#compare($object, $state)`
+    - `null|array ObjectComparator#compareObjects(object $object, mixed $state)`
+    - `null|array ObjectComparator#compareSnapshots(Snapshot $left, Snapshot $right)`
 
  - It must provide a simple `ChangeSet` that allows tracking object state (already implemented so far)
     - addition of `object`s
