@@ -5,8 +5,9 @@ Here's a list of the requirements that this library should fulfill:
  - MUST provide a simple interface for getting snapshots of `object`s
     - `Snapshot SnapshotManager#getSnapshot(object $object)`
     - `null|array SnapshotManager#compareSnapshots(Snapshot $left, Snapshot $right)`
-    - `null|array SnapshotManager#compareState(object $object, Snapshot $snapshot)`
+    - `null|array SnapshotManager#compareState(Snapshot $snapshot)`
     - comparison should be allowed via either *value* or *identity*, depending on user needs
+    - setting object state from a snapshot `null|array SnapshotManager#applySnapshot(object $object, Snapshot $snapshot)`
 
  - `Snapshot` instances MUST:
     - be `Serializable`
