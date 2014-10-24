@@ -1,0 +1,5 @@
+default:
+    suites:
+        unit_of_work:
+            paths:    [ %paths.base%/features ]
+            contexts: [ ChangeSetTestContext\UnitOfWorkContext ]
