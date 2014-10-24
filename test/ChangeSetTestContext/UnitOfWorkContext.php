@@ -5,9 +5,8 @@ namespace ChangeSetTestContext;
 use Behat\Behat\Context\Context;
 use Behat\Behat\Context\SnippetAcceptingContext;
 use Behat\Behat\Tester\Exception\PendingException;
-use Behat\Gherkin\Node\PyStringNode;
-use Behat\Gherkin\Node\TableNode;
 use ChangeSet\UnitOfWork\SimpleUnitOfWork;
+use stdClass;
 use Zend\EventManager\EventManager;
 
 /**
@@ -49,7 +48,10 @@ class UnitOfWorkContext implements Context, SnippetAcceptingContext
      */
     public function aNewObject($name)
     {
-        throw new PendingException();
+        $object = new stdClass();
+
+        $object->name         = $name;
+        $this->objects[$name] = $object;
     }
 
     /**
@@ -57,7 +59,7 @@ class UnitOfWorkContext implements Context, SnippetAcceptingContext
      */
     public function iPersistTheObject($name)
     {
-        throw new PendingException();
+        $this->unitOfWork->registerNew($this->objects[$name]);
     }
 
     /**
@@ -73,7 +75,7 @@ class UnitOfWorkContext implements Context, SnippetAcceptingContext
      */
     public function iRemoveTheObject($name)
     {
-        throw new PendingException();
+        $this->unitOfWork->registerRemoved($this->objects[$name]);
     }
 
     /**
