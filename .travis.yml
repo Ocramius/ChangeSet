@@ -14,6 +14,3 @@ script:
 #  - ./vendor/bin/phpunit --group=Functional
 #  - ./vendor/bin/phpunit --group=Performance
   - ./vendor/bin/phpcs --standard=PSR2 ./src/ ./tests/
-
-after_script:
-  - php vendor/bin/coveralls -v
