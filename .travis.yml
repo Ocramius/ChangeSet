@@ -13,4 +13,4 @@ script:
   - ./vendor/bin/phpunit --coverage-clover ./build/logs/clover.xml --exclude-group Functional,Performance
 #  - ./vendor/bin/phpunit --group=Functional
 #  - ./vendor/bin/phpunit --group=Performance
-  - ./vendor/bin/phpcs --standard=PSR2 ./src/ ./tests/
+  - ./vendor/bin/phpcs --standard=PSR2 ./src/ ./test/

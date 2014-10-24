@@ -36,9 +36,9 @@
     },
     "autoload-dev": {
         "psr-0": {
-            "ChangeSetTest\\":        "tests",
-            "ChangeSetTestAsset\\":   "tests",
-            "ChangeSetTestContext\\": "tests"
+            "ChangeSetTest\\":        "test",
+            "ChangeSetTestAsset\\":   "test",
+            "ChangeSetTestContext\\": "test"
         }
     },
     "extra": {
