@@ -73,4 +73,9 @@ class SimpleUnitOfWork implements UnitOfWorkInterface
 
         $this->changeMap = $this->changeMap->clear();
     }
+
+    public function contains($object)
+    {
+        return $this->changeMap->isTracking($object);
+    }
 }
