@@ -34,6 +34,13 @@
             "ChangeSet\\": "src"
         }
     },
+    "autoload-dev": {
+        "psr-0": {
+            "ChangeSetTest\\":        "tests",
+            "ChangeSetTestAsset\\":   "tests",
+            "ChangeSetTestContext\\": "tests"
+        }
+    },
     "extra": {
         "branch-alias": {
             "dev-master": "1.0.x-dev"
