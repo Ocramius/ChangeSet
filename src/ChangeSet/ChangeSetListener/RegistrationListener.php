@@ -10,8 +10,8 @@ class RegistrationListener extends AbstractListenerAggregate
 {
     public function attach(EventManagerInterface $eventManager)
     {
-        $this->listeners[] = $eventManager->attach('register', array($this, 'cascadeCollections'), 100);
-        $this->listeners[] = $eventManager->attach('register', array($this, 'cascadeAssociations'), 50);
+        $this->listeners[] = $eventManager->attach('registerClean', array($this, 'cascadeCollections'), 100);
+        $this->listeners[] = $eventManager->attach('registerClean', array($this, 'cascadeAssociations'), 50);
     }
 
     public function cascadeCollections(EventInterface $event)

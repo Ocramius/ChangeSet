@@ -2,6 +2,7 @@
 
 namespace ChangeSetTest\ObjectManager;
 
+use ChangeSet\ChangeTracking\ChangeMap;
 use PHPUnit_Framework_TestCase;
 use Zend\EventManager\EventManager;
 use ChangeSet\IdentityExtractor\IdentityExtractorFactory;
@@ -13,7 +14,6 @@ use ChangeSet\UnitOfWork\SimpleUnitOfWork;
 use ChangeSet\IdentityMap\IdentityMap;
 use ChangeSet\ChangeSetListener\IdentityMapSynchronizer;
 use ChangeSet\ObjectManager\SimpleObjectManager;
-use ChangeSet\ChangeSet;
 use ChangeSet\Committer\SimpleLoggingCommitter;
 use ChangeSet\Container\Container;
 
@@ -30,9 +30,9 @@ class ObjectManagerIntegrationTest extends PHPUnit_Framework_TestCase
             }
         );
 
-        $container['changeset'] = $container->share(
+        $container['changemap'] = $container->share(
             function (Container $container) {
-                return  new ChangeSet($container->offsetGet('event_manager'));
+                return new ChangeMap($container->offsetGet('event_manager'));
             }
         );
 
@@ -69,7 +69,7 @@ class ObjectManagerIntegrationTest extends PHPUnit_Framework_TestCase
 
         $container['unit_of_work'] = $container->share(
             function (Container $container) {
-                return new SimpleUnitOfWork($container['changeset']);
+                return new SimpleUnitOfWork($container->offsetGet('event_manager'));
             }
         );
 
@@ -118,7 +118,7 @@ class ObjectManagerIntegrationTest extends PHPUnit_Framework_TestCase
         $listener = $this->getMock('stdClass', array('__invoke'));
 
         $listener->expects($this->exactly(2))->method('__invoke');
-        $container["event_manager"]->attach('register', $listener);
+        $container["event_manager"]->attach('registerClean', $listener);
 
         // @todo should repositories be fetched somhow differently? Maybe force per-hand instantiation?
         $repository = $container['object_manager']->getRepository('stdClass');
@@ -155,7 +155,7 @@ class ObjectManagerIntegrationTest extends PHPUnit_Framework_TestCase
 
         $listener->expects($this->exactly(2))->method('__invoke');
 
-        $container["event_manager"]->attach('add', $listener);
+        $container["event_manager"]->attach('registerNew', $listener);
 
         // @todo should repositories be fetched somhow differently? Maybe force per-hand instantiation?
         $repository = $container['object_manager']->getRepository('stdClass');
@@ -197,7 +197,7 @@ class ObjectManagerIntegrationTest extends PHPUnit_Framework_TestCase
 
         $listener->expects($this->exactly(2))->method('__invoke');
 
-        $container["event_manager"]->attach('remove', $listener);
+        $container["event_manager"]->attach('registerRemoved', $listener);
 
         // @todo should repositories be fetched somhow differently? Maybe force per-hand instantiation?
         $repository = $container['object_manager']->getRepository('stdClass');

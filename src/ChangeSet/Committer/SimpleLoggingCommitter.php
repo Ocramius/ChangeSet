@@ -2,26 +2,26 @@
 
 namespace ChangeSet\Committer;
 
-use ChangeSet\ChangeSet;
+use ChangeSet\ChangeTracking\ChangeMap;
 
 class SimpleLoggingCommitter implements CommitterInterface
 {
     public $operations = array();
 
-    public function commit(ChangeSet $changeSet)
+    public function commit(ChangeMap $changeSet)
     {
         $this->operations = array();
 
         foreach ($changeSet->getNew() as $insert) {
-            $this->addChange('insert', $insert);
+            $this->addChange('insert', $insert->getObject());
         }
 
         foreach ($changeSet->getChangedManaged() as $update) {
-            $this->addChange('update', $update);
+            $this->addChange('update', $update->getObject());
         }
 
         foreach ($changeSet->getRemoved() as $delete) {
-            $this->addChange('delete', $delete);
+            $this->addChange('delete', $delete->getObject());
         }
     }
 

@@ -2,37 +2,75 @@
 
 namespace ChangeSet\UnitOfWork;
 
-use ChangeSet\ChangeSet;
+use ChangeSet\ChangeTracking\ChangeMap;
 use ChangeSet\Committer\CommitterInterface;
+use ChangeSet\Reverter\ReverterInterface;
+use Zend\EventManager\EventManagerInterface;
 
 class SimpleUnitOfWork implements UnitOfWorkInterface
 {
-    protected $changeSet;
+    protected $eventManager;
+    protected $changeMap;
 
-    public function __construct(ChangeSet $changeSet)
+    public function __construct(EventManagerInterface $eventManager)
     {
-        $this->changeSet = $changeSet;
+        $this->eventManager = $eventManager;
+        $this->changeMap    = new ChangeMap();
     }
 
     public function registerClean($object)
     {
-        $this->changeSet->register($object);
+        if ($change = $this->changeMap->register($object)) {
+            $this->eventManager->trigger(
+                __FUNCTION__,
+                $this,
+                ['object' => $object, 'change' => $change]
+            );
+        }
     }
 
     public function registerNew($object)
     {
-        $this->changeSet->add($object);
+        if ($change = $this->changeMap->add($object)) {
+            $this->eventManager->trigger(
+                __FUNCTION__,
+                $this,
+                ['object' => $object, 'change' => $change]
+            );
+        }
     }
 
     public function registerRemoved($object)
     {
-        $this->changeSet->remove($object);
+        if ($change = $this->changeMap->remove($object)) {
+            $this->eventManager->trigger(
+                __FUNCTION__,
+                $this,
+                ['object' => $object, 'change' => $change]
+            );
+        }
     }
 
     public function commit(CommitterInterface $committer)
     {
-        $committer->commit($this->changeSet);
+        // @todo events here?
 
-        $this->changeSet = $this->changeSet->clean();
+        $committer->commit($this->changeMap);
+
+        $this->changeMap = $this->changeMap->clean();
+    }
+
+    public function revert(ReverterInterface $reverter)
+    {
+        $reverter->revert($this->changeMap);
+
+        $this->clear();
+    }
+
+    public function clear()
+    {
+        // @todo events here?
+
+        $this->changeMap = $this->changeMap->clear();
     }
 }

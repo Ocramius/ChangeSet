@@ -2,9 +2,9 @@
 
 namespace ChangeSet\Committer;
 
-use ChangeSet\ChangeSet;
+use ChangeSet\ChangeTracking\ChangeMap;
 
 interface CommitterInterface
 {
-    public function commit(ChangeSet $changeSet);
+    public function commit(ChangeMap $changeSet);
 }
