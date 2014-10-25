@@ -48,4 +48,5 @@ Feature: UnitOfWork
     And a new object "example"
     When I register the object "example"
     And I remove the object "example"
-    Then the object "example" must be marked for removal by the UnitOfWork
+    # @TODO maybe should differentiate entity states here
+    Then the object "example" must be managed by the UnitOfWork
