@@ -50,3 +50,37 @@ Feature: UnitOfWork
     And I remove the object "example"
     # @TODO maybe should differentiate entity states here
     Then the object "example" must be managed by the UnitOfWork
+
+  Scenario: Register multiple entities
+    Given a new UnitOfWork
+    And a new object "example1"
+    And a new object "example2"
+    When I register the object "example1"
+    And I register the object "example2"
+    Then the object "example1" must be managed by the UnitOfWork
+    And the object "example2" must be managed by the UnitOfWork
+
+  Scenario: Remove an un-managed entity
+    Given a new UnitOfWork
+    And a new object "example"
+    Then I cannot remove the object "example"
+
+  Scenario: Remove and immediately persist an entity
+    Given a new UnitOfWork
+    And a new object "example"
+    When I register the object "example"
+    And I remove the object "example"
+    And I persist the object "example"
+    # @TODO need more accurate assertion here
+    And the object "example" must be managed by the UnitOfWork
+
+  Scenario: Remove and immediately manage an entity
+    Given a new UnitOfWork
+    And a new object "example"
+    When I register the object "example"
+    And I remove the object "example"
+    And I register the object "example"
+    # @TODO need more accurate assertion here
+    And the object "example" must be managed by the UnitOfWork
+
+
