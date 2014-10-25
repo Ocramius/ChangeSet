@@ -232,6 +232,51 @@ class UnitOfWorkContext implements Context, SnippetAcceptingContext
     {
         $object = $this->objects[$name];
 
-        $object->changedProperty = (isset($object->changedProperty) ? $object->changedProperty : '') . ' - changed';
+        $object->changed = (isset($object->changed) ? $object->changed . ' - ' : '') . 'changed';
+    }
+
+    /**
+     * @When I rollback( again)
+     */
+    public function iRollback()
+    {
+        throw new PendingException();
+    }
+
+    /**
+     * @Then the object :name should return to its original state
+     */
+    public function theObjectShouldReturnToItsOriginalState($name)
+    {
+        $comparedObject = new stdClass();
+
+        $comparedObject->name = $name;
+
+        if ($this->objects[$name] != $comparedObject) {
+            throw new \UnexpectedValueException(sprintf(
+                'The object "%s" was not in its original state: %s',
+                $name,
+                var_export($this->objects[$name], true)
+            ));
+        }
+    }
+
+    /**
+     * @Then the object :name should be in its changed state
+     */
+    public function theObjectShouldBeInItsChangedState($name)
+    {
+        $comparedObject = new stdClass();
+
+        $comparedObject->name    = $name;
+        $comparedObject->changed = 'changed';
+
+        if ($this->objects[$name] != $comparedObject) {
+            throw new \UnexpectedValueException(sprintf(
+                'The object "%s" was not in its changed state: %s',
+                $name,
+                var_export($this->objects[$name], true)
+            ));
+        }
     }
 }
