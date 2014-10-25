@@ -7,6 +7,7 @@ Feature: UnitOfWork
     And a new object "example"
     When I persist the object "example"
     Then the object "example" must be managed by the UnitOfWork
+    And the object "example1" must be marked as "new"
 
   # @TODO not sure if a remove should cause an actual removal or clear the previous operation
   Scenario: Persist and immediately remove an entity
@@ -24,6 +25,8 @@ Feature: UnitOfWork
     And I persist the object "example2"
     Then the object "example1" must be managed by the UnitOfWork
     And the object "example2" must be managed by the UnitOfWork
+    And the object "example1" must be marked as "new"
+    And the object "example1" must be marked as "new"
 
   # @TODO not sure if a remove should cause an actual removal or clear the previous operation
   Scenario: Persist and immediately remove multiple entities
@@ -48,8 +51,8 @@ Feature: UnitOfWork
     And a new object "example"
     When I register the object "example"
     And I remove the object "example"
-    # @TODO maybe should differentiate entity states here
     Then the object "example" must be managed by the UnitOfWork
+    And the object "example1" must be marked as "removed"
 
   Scenario: Register multiple entities
     Given a new UnitOfWork
@@ -59,6 +62,8 @@ Feature: UnitOfWork
     And I register the object "example2"
     Then the object "example1" must be managed by the UnitOfWork
     And the object "example2" must be managed by the UnitOfWork
+    And the object "example1" must be marked as "managed"
+    And the object "example2" must be marked as "managed"
 
   Scenario: Remove an un-managed entity
     Given a new UnitOfWork
@@ -71,8 +76,8 @@ Feature: UnitOfWork
     When I register the object "example"
     And I remove the object "example"
     And I persist the object "example"
-    # @TODO need more accurate assertion here
     And the object "example" must be managed by the UnitOfWork
+    And the object "example" must be marked as "removed"
 
   Scenario: Remove and immediately manage an entity
     Given a new UnitOfWork
@@ -80,7 +85,7 @@ Feature: UnitOfWork
     When I register the object "example"
     And I remove the object "example"
     And I register the object "example"
-    # @TODO need more accurate assertion here
     And the object "example" must be managed by the UnitOfWork
+    And the object "example" must be marked as "removed"
 
 
