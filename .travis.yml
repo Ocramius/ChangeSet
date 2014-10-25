@@ -14,3 +14,4 @@ script:
 #  - ./vendor/bin/phpunit --group=Functional
 #  - ./vendor/bin/phpunit --group=Performance
   - ./vendor/bin/phpcs --standard=PSR2 ./src/ ./test/
+  - ./vendir/bin/behat
