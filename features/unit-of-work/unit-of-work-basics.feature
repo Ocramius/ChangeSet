@@ -9,7 +9,6 @@ Feature: UnitOfWork
     Then the object "example" must be managed by the UnitOfWork
     And the object "example1" must be marked as "new"
 
-  # @TODO not sure if a remove should cause an actual removal or clear the previous operation
   Scenario: Persist and immediately remove an entity
     Given a new UnitOfWork
     And a new object "example"
@@ -28,7 +27,6 @@ Feature: UnitOfWork
     And the object "example1" must be marked as "new"
     And the object "example1" must be marked as "new"
 
-  # @TODO not sure if a remove should cause an actual removal or clear the previous operation
   Scenario: Persist and immediately remove multiple entities
     Given a new UnitOfWork
     And a new object "example1"
