@@ -4,8 +4,10 @@ namespace ChangeSetTestContext;
 
 use Behat\Behat\Context\Context;
 use Behat\Behat\Context\SnippetAcceptingContext;
+use Behat\Behat\Tester\Exception\PendingException;
 use ChangeSet\UnitOfWork\SimpleUnitOfWork;
 use stdClass;
+use UnexpectedValueException;
 use Zend\EventManager\EventManager;
 
 /**
@@ -85,6 +87,36 @@ class UnitOfWorkContext implements Context, SnippetAcceptingContext
     }
 
     /**
+     * @Then the object :name must be marked as :state
+     *
+     * @param string $name
+     * @param string $state
+     */
+    public function theObjectMustBeMarkedAs($name, $state)
+    {
+        throw new PendingException;
+    }
+
+    /**
+     * @Then I cannot remove the object :name
+     *
+     * @param string $name
+     */
+    public function iCannotRemoveTheObject($name)
+    {
+        try {
+            $this->unitOfWork->registerRemoved($this->objects[$name]);
+        } catch (\InvalidArgumentException $e) {
+            return;
+        }
+
+        throw new UnexpectedValueException(sprintf(
+            'Was expecting removal of object "%s" to fail',
+            $name
+        ));
+    }
+
+    /**
      * @Then the object :name must be managed by the UnitOfWork
      *
      * @param string $name
@@ -92,7 +124,7 @@ class UnitOfWorkContext implements Context, SnippetAcceptingContext
     public function theObjectMustBeManagedByTheUnitofwork($name)
     {
         if (! $this->unitOfWork->contains($this->objects[$name])) {
-            throw new \UnexpectedValueException(sprintf(
+            throw new UnexpectedValueException(sprintf(
                 'Expect object "%s" to be contained in the UnitOfWork',
                 $name
             ));
@@ -107,7 +139,7 @@ class UnitOfWorkContext implements Context, SnippetAcceptingContext
     public function theObjectMustBeUnknownToTheUnitofwork($name)
     {
         if ($this->unitOfWork->contains($this->objects[$name])) {
-            throw new \UnexpectedValueException(sprintf(
+            throw new UnexpectedValueException(sprintf(
                 'Did not expect object "%s" to be contained in the UnitOfWork',
                 $name
             ));
