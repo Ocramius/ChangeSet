@@ -66,6 +66,25 @@ class UnitOfWorkContext implements Context, SnippetAcceptingContext
     }
 
     /**
+     * @When I remove the object :name
+     *
+     * @param string $name
+     */
+    public function iRemoveTheObject($name)
+    {
+        $this->unitOfWork->registerRemoved($this->objects[$name]);
+    }
+    /**
+     * @When I register the object :name
+     *
+     * @param string $name
+     */
+    public function iRegisterTheObject($name)
+    {
+        $this->unitOfWork->registerClean($this->objects[$name]);
+    }
+
+    /**
      * @Then the object :name must be managed by the UnitOfWork
      *
      * @param string $name
@@ -78,16 +97,6 @@ class UnitOfWorkContext implements Context, SnippetAcceptingContext
                 $name
             ));
         }
-    }
-
-    /**
-     * @When I remove the object :name
-     *
-     * @param string $name
-     */
-    public function iRemoveTheObject($name)
-    {
-        $this->unitOfWork->registerRemoved($this->objects[$name]);
     }
 
     /**
