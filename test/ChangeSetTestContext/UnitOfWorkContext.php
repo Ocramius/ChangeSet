@@ -28,7 +28,7 @@ class UnitOfWorkContext implements Context, SnippetAcceptingContext
     private $unitOfWork;
 
     /**
-     * @var array
+     * @var array|null
      */
     private $lastCommit;
 
