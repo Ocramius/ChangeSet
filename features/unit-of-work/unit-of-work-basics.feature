@@ -1,4 +1,4 @@
-Feature: UnitOfWork
+Feature: UnitOfWork Object States
   In order to interact with entities
   An UnitOfWork should be able to track their state
 
