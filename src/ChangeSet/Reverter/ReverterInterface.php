@@ -1,6 +1,6 @@
 <?php
-namespace ChangeSet\Reverter;
 
+namespace ChangeSet\Reverter;
 
 use ChangeSet\ChangeTracking\ChangeMap;
 

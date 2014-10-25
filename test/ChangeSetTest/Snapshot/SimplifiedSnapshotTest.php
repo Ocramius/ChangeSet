@@ -19,4 +19,4 @@ class SimplifiedSnapshotTest extends SnapshotTest
     {
         return new SimplifiedSnapshot(new \stdClass(), array('foo' => 'bar'));
     }
-} 
+}

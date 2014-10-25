@@ -2,7 +2,6 @@
 
 namespace ChangeSet\ObjectRepository;
 
-
 class SimpleObjectRepository extends ObjectRepository implements ObjectRepositoryInterface
 {
     public function add($object)

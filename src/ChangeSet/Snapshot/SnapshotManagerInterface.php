@@ -50,4 +50,4 @@ interface SnapshotManagerInterface
      * @return void
      */
     public function applySnapshot($object, SnapshotInterface $snapshot);
-} 
+}

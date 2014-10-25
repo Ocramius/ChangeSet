@@ -47,4 +47,4 @@ class SnapshotTest extends PHPUnit_Framework_TestCase
         $this->assertEquals($snapshot->getObject(), $unserialized->getObject());
         $this->assertEquals($snapshot->getState(), $unserialized->getState());
     }
-} 
+}
