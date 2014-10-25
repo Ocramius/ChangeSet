@@ -5,7 +5,9 @@ namespace ChangeSetTestContext;
 use Behat\Behat\Context\Context;
 use Behat\Behat\Context\SnippetAcceptingContext;
 use Behat\Behat\Tester\Exception\PendingException;
+use ChangeSet\Committer\SimpleLoggingCommitter;
 use ChangeSet\UnitOfWork\SimpleUnitOfWork;
+use LogicException;
 use stdClass;
 use UnexpectedValueException;
 use Zend\EventManager\EventManager;
@@ -156,15 +158,41 @@ class UnitOfWorkContext implements Context, SnippetAcceptingContext
      */
     public function iCommit()
     {
-        throw new PendingException();
+        $committer = new SimpleLoggingCommitter();
+
+        $this->unitOfWork->commit($committer);
+
+        $this->lastCommit = $committer->operations;
     }
 
     /**
      * @Then the object :name is in the :changeType records
+     *
+     * @param string $name
+     * @param string $changeType
      */
     public function theObjectIsInTheRecords($name, $changeType)
     {
-        throw new PendingException();
+        if (null === $this->lastCommit) {
+            throw new LogicException('Did not commit yet, therefore cannot check the last commit');
+        }
+
+        foreach ($this->lastCommit as $record) {
+            if ($this->objects[$name] === $record['object']) {
+                if ($record['type'] === $changeType) {
+                    return;
+                }
+
+                throw new UnexpectedValueException(sprintf(
+                    'Expected object "%s" to be found in change type "%s", found it in change type "%s" instead',
+                    $name,
+                    $changeType,
+                    $record['type']
+                ));
+            }
+        }
+
+        throw new UnexpectedValueException(sprintf('Could not find to find object "%s" in the commit', $name));
     }
 
     /**
@@ -182,7 +210,17 @@ class UnitOfWorkContext implements Context, SnippetAcceptingContext
      */
     public function theNumberOfRecordsInTheCommitIs($count)
     {
-        throw new PendingException();
+        if (null === $this->lastCommit) {
+            throw new LogicException('Did not commit yet, therefore cannot check the last commit');
+        }
+
+        if (count($this->lastCommit) != $count) {
+            throw new UnexpectedValueException(sprintf(
+                'Expected committed record count to be "%s", "%s" found',
+                $count,
+                count($this->lastCommit)
+            ));
+        }
     }
 
     /**
