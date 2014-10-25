@@ -7,7 +7,7 @@ Feature: UnitOfWork Commits
     And a new object "example"
     And I persist the object "example"
     When I commit
-    Then the object "example" is in the "inserted" records
+    Then the object "example" is in the "insert" records
     And the number of records in the commit is 1
 
   Scenario: Commit multiple persisted entities
@@ -17,8 +17,8 @@ Feature: UnitOfWork Commits
     And I persist the object "example1"
     And I persist the object "example2"
     When I commit
-    Then the object "example1" is in the "inserted" records
-    Then the object "example2" is in the "inserted" records
+    Then the object "example1" is in the "insert" records
+    Then the object "example2" is in the "insert" records
     And the number of records in the commit is 2
 
   Scenario: Commit a single removed entity
@@ -27,7 +27,7 @@ Feature: UnitOfWork Commits
     And I register the object "example"
     And I remove the object "example"
     When I commit
-    Then the object "example" is in the "removed" records
+    Then the object "example" is in the "delete" records
     And the number of records in the commit is 1
 
   Scenario: Commit a multiple removed entities
@@ -39,8 +39,8 @@ Feature: UnitOfWork Commits
     And I remove the object "example1"
     And I remove the object "example2"
     When I commit
-    Then the object "example1" is in the "removed" records
-    Then the object "example2" is in the "removed" records
+    Then the object "example1" is in the "delete" records
+    Then the object "example2" is in the "delete" records
     And the number of records in the commit is 2
 
   Scenario: Commit a single changed entity
@@ -49,7 +49,7 @@ Feature: UnitOfWork Commits
     And I register the object "example"
     And I change the object "example"
     When I commit
-    Then the object "example" is in the "updated" records
+    Then the object "example" is in the "update" records
     And the number of records in the commit is 1
 
   Scenario: Commit multiple changed entities
@@ -61,8 +61,8 @@ Feature: UnitOfWork Commits
     And I change the object "example1"
     And I change the object "example2"
     When I commit
-    Then the object "example1" is in the "updated" records
-    Then the object "example2" is in the "updated" records
+    Then the object "example1" is in the "update" records
+    Then the object "example2" is in the "update" records
     And the number of records in the commit is 2
 
   Scenario: Commit without changes
@@ -84,9 +84,9 @@ Feature: UnitOfWork Commits
     And I remove the object "example3"
     When I commit
     Then the number of records in the commit is 3
-    And the object "example1" is in the "updated" records
-    And the object "example2" is in the "inserted" records
-    And the object "example3" is in the "removed" records
+    And the object "example1" is in the "update" records
+    And the object "example2" is in the "insert" records
+    And the object "example3" is in the "delete" records
 
   Scenario: Committing multiple times is redundant
     Given a new UnitOfWork
