@@ -16,7 +16,7 @@ use Zend\EventManager\EventManager;
 class UnitOfWorkContext implements Context, SnippetAcceptingContext
 {
     /**
-     * @var object[] indexed by name
+     * @var \stdClass[] indexed by name
      */
     private $objects = [];
 
@@ -24,6 +24,11 @@ class UnitOfWorkContext implements Context, SnippetAcceptingContext
      * @var \ChangeSet\UnitOfWork\SimpleUnitOfWork
      */
     private $unitOfWork;
+
+    /**
+     * @var array
+     */
+    private $lastCommit;
 
     /**
      * Initializes context.
@@ -144,5 +149,51 @@ class UnitOfWorkContext implements Context, SnippetAcceptingContext
                 $name
             ));
         }
+    }
+
+    /**
+     * @When I commit( again)
+     */
+    public function iCommit()
+    {
+        throw new PendingException();
+    }
+
+    /**
+     * @Then the object :name is in the :changeType records
+     */
+    public function theObjectIsInTheRecords($name, $changeType)
+    {
+        throw new PendingException();
+    }
+
+    /**
+     * @Then the commit is empty
+     */
+    public function theCommitIsEmpty()
+    {
+        $this->theNumberOfRecordsInTheCommitIs(0);
+    }
+
+    /**
+     * @Then the number of records in the commit is :count
+     *
+     * @param int $count
+     */
+    public function theNumberOfRecordsInTheCommitIs($count)
+    {
+        throw new PendingException();
+    }
+
+    /**
+     * @Given I change the object :name
+     *
+     * @param string $name
+     */
+    public function iChangeTheObject($name)
+    {
+        $object = $this->objects[$name];
+
+        $object->changedProperty = (isset($object->changedProperty) ? $object->changedProperty : '') . ' - changed';
     }
 }
