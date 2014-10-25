@@ -91,7 +91,7 @@ Feature: UnitOfWork Commits
   Scenario: Committing multiple times is redundant
     Given a new UnitOfWork
     And a new object "example"
-    And I persist the object "example1"
+    And I persist the object "example"
     When I commit
     And I commit again
     Then the commit is empty
