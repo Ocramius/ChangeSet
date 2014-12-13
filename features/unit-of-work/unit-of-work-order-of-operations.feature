@@ -8,7 +8,7 @@ Feature: UnitOfWork keeps track of the order of operations
     And I persist the object "example"
     When I commit
     Then there is 1 object in the commit operations
-    And the operation 0 is a "insert" of object "example"
+    And the operation 0 is an "insert" of object "example"
 
   Scenario: Commit a single persisted entity
     Given a new UnitOfWork
@@ -18,8 +18,8 @@ Feature: UnitOfWork keeps track of the order of operations
     And I persist the object "example2"
     When I commit
     Then there are 2 objects in the commit operations
-    And the operation 0 is a "insert" of object "example1"
-    And the operation 1 is a "insert" of object "example2"
+    And the operation 0 is an "insert" of object "example1"
+    And the operation 1 is an "insert" of object "example2"
 
   Scenario: Commit a single persisted entity
     Given a new UnitOfWork
@@ -29,5 +29,5 @@ Feature: UnitOfWork keeps track of the order of operations
     And I persist the object "example1"
     When I commit
     Then there are 2 objects in the commit operations
-    And the operation 0 is a "insert" of object "example2"
-    And the operation 1 is a "insert" of object "example1"
+    And the operation 0 is an "insert" of object "example2"
+    And the operation 1 is an "insert" of object "example1"
