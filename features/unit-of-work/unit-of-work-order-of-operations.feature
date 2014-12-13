@@ -32,7 +32,7 @@ Feature: UnitOfWork keeps track of the order of operations
     And the operation 0 is an "insert" of object "example2"
     And the operation 1 is an "insert" of object "example1"
 
-  Scenario: Commit times the same multiple time persisted entity
+  Scenario: Commit the same multiple times persisted entity
     Given a new UnitOfWork
     And a new object "example"
     And I persist the object "example1"
