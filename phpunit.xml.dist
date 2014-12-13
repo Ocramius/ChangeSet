@@ -1,6 +1,6 @@
 <?xml version="1.0"?>
 <phpunit
-    bootstrap="./tests/Bootstrap.php"
+    bootstrap="./test/Bootstrap.php"
     colors="false"
     convertErrorsToExceptions="true"
     convertNoticesToExceptions="true"
@@ -12,7 +12,7 @@
     syntaxCheck="true"
 >
     <testsuite name="ChangeSet tests">
-        <directory>./tests/ChangeSetTest</directory>
+        <directory>./test/ChangeSetTest</directory>
     </testsuite>
     <filter>
         <whitelist addUncoveredFilesFromWhitelist="true">

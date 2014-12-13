@@ -1,0 +1,8 @@
+default:
+    suites:
+        unit_of_work:
+            paths:    [ %paths.base%/features/unit-of-work ]
+            contexts: [ ChangeSetTestContext\UnitOfWorkContext ]
+        identity_map:
+            paths:    [ %paths.base%/features/identity-map ]
+            contexts: [ ChangeSetTestContext\IdentityMapContext ]

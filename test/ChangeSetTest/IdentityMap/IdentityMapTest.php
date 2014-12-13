@@ -2,7 +2,6 @@
 
 namespace ChangeSetTest\IdentityMap;
 
-
 use ChangeSet\Container\IdentityExtractorContainerInterface;
 use ChangeSet\IdentityMap\IdentityMap;
 use PHPUnit_Framework_TestCase;

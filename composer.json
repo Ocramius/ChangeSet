@@ -19,20 +19,26 @@
         }
     ],
     "require": {
-        "php": ">=5.4",
+        "php": "~5.4",
         "zendframework/zend-eventmanager": "2.*"
     },
     "require-dev": {
-        "phpunit/phpunit":           ">=3.7",
-        "phpmd/phpmd":               "1.4.*",
-        "squizlabs/php_codesniffer": "1.4.*",
-        "zendframework/zend-stdlib": "2.*",
-        "satooshi/php-coveralls":    "~0.6",
-        "pimple/pimple":             "1.0.*"
+        "phpunit/phpunit":           "~4.0",
+        "squizlabs/php_codesniffer": "~2.0@RC",
+        "zendframework/zend-stdlib": "~2.3",
+        "pimple/pimple":             "1.0.*",
+        "behat/behat":               "~3.0"
     },
     "autoload": {
         "psr-0": {
             "ChangeSet\\": "src"
+        }
+    },
+    "autoload-dev": {
+        "psr-0": {
+            "ChangeSetTest\\":        "test",
+            "ChangeSetTestAsset\\":   "test",
+            "ChangeSetTestContext\\": "test"
         }
     },
     "extra": {
