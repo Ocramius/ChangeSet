@@ -35,7 +35,6 @@ Feature: UnitOfWork keeps track of the order of operations
   Scenario: Commit and remove a single entity
     Given a new UnitOfWork
     And a new object "example1"
-    And a new object "example2"
     And I persist the object "example1"
     And I remove the object "example1"
     When I commit
@@ -46,7 +45,6 @@ Feature: UnitOfWork keeps track of the order of operations
   Scenario: Register and remove a single entity
     Given a new UnitOfWork
     And a new object "example1"
-    And a new object "example2"
     And I register the object "example1"
     And I remove the object "example1"
     When I commit
