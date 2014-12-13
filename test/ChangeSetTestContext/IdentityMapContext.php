@@ -97,6 +97,25 @@ class IdentityMapContext implements Context, SnippetAcceptingContext
     }
 
     /**
+     * @Then I cannot retrieve object :name by class :className and identity :identity
+     *
+     * @param string $name
+     * @param string $className
+     * @param string $identity
+     */
+    public function iCannotRetrieveObjectByIdentity($name, $className, $identity)
+    {
+        if ($this->objects[$name] === $this->identityMap->getObject($className, $identity)) {
+            throw new UnexpectedValueException(sprintf(
+                'Didn\'t expect to find object matching "%s" of type "%s" with identity "%s"',
+                $name,
+                $className,
+                $identity
+            ));
+        }
+    }
+
+    /**
      * @Then I can retrieve identity :identity by object :name
      *
      * @param string $identity
