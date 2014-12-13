@@ -83,6 +83,7 @@ class UnitOfWorkContext implements Context, SnippetAcceptingContext
     {
         $this->unitOfWork->registerRemoved($this->objects[$name]);
     }
+
     /**
      * @When I register the object :name
      *
