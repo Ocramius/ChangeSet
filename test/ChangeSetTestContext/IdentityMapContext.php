@@ -4,15 +4,9 @@ namespace ChangeSetTestContext;
 
 use Behat\Behat\Context\Context;
 use Behat\Behat\Context\SnippetAcceptingContext;
-use Behat\Behat\Tester\Exception\PendingException;
-use ChangeSet\Committer\SimpleLoggingCommitter;
-use ChangeSet\IdentityMap\IdentityMap;
 use ChangeSet\IdentityMap\SimpleIdentityMap;
-use ChangeSet\UnitOfWork\SimpleUnitOfWork;
-use LogicException;
 use stdClass;
 use UnexpectedValueException;
-use Zend\EventManager\EventManager;
 
 /**
  * Behat context for {@see \ChangeSet\IdentityMap\SimpleIdentityMap} implementation exploration

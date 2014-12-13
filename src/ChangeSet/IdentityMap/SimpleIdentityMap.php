@@ -2,9 +2,6 @@
 
 namespace ChangeSet\IdentityMap;
 
-use ChangeSet\IdentityExtractor\IdentityExtractorFactoryInterface;
-use SplObjectStorage;
-
 /**
  * @TODO consider bulk API
  */
