@@ -63,7 +63,7 @@ class IdentityMapContext implements Context, SnippetAcceptingContext
     }
 
     /**
-     * @When I store the entity :name in the identity map with identity :name
+     * @When I store the entity :name in the identity map with identity :identity
      *
      * @param string $name
      * @param string $identity
