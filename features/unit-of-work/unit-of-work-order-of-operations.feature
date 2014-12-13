@@ -51,6 +51,19 @@ Feature: UnitOfWork keeps track of the order of operations
     Then there is 1 object in the commit operations
     And the operation 0 is a "remove" of object "example1"
 
+  Scenario: Register and remove multiple entities
+    Given a new UnitOfWork
+    And a new object "example1"
+    And a new object "example2"
+    And I register the object "example1"
+    And I register the object "example2"
+    And I remove the object "example2"
+    And I remove the object "example1"
+    When I commit
+    Then there are 2 objects in the commit operations
+    And the operation 0 is a "remove" of object "example2"
+    And the operation 0 is a "remove" of object "example"
+
   Scenario: Register and change a single entity
     Given a new UnitOfWork
     And a new object "example1"
