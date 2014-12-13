@@ -279,4 +279,40 @@ class UnitOfWorkContext implements Context, SnippetAcceptingContext
             ));
         }
     }
+
+    /**
+     * @Then there (is|are) :count object(s)? in the commit operations
+     *
+     * @param int $count
+     */
+    public function theOrderedCommitOperationsContainsCountOfOperations($count)
+    {
+        $commit = $this->getLastCommit();
+
+        throw new PendingException();
+    }
+
+    /**
+     * @Then the operation :position is a(n)? :type of object :object
+     *
+     * @param int    $position
+     * @param string $type
+     * @param string $object
+     */
+    public function theOrderedCommitOperationAtPositionIsA($position, $type, $object)
+    {
+        throw new PendingException();
+    }
+
+    /**
+     * @return array|null
+     */
+    private function getLastCommit()
+    {
+        if (null === $this->lastCommit) {
+            throw new LogicException('Did not commit yet, therefore cannot check the last commit');
+        }
+
+        return $this->lastCommit;
+    }
 }
