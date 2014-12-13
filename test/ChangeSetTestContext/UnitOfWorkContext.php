@@ -281,7 +281,7 @@ class UnitOfWorkContext implements Context, SnippetAcceptingContext
     }
 
     /**
-     * @Then there (is|are) :count object(s)? in the commit operations
+     * @Then there (is)(are) :count object(s) in the commit operations
      *
      * @param int $count
      */
@@ -293,7 +293,7 @@ class UnitOfWorkContext implements Context, SnippetAcceptingContext
     }
 
     /**
-     * @Then the operation :position is a(n)? :type of object :object
+     * @Then the operation :position is a(n) :type of object :object
      *
      * @param int    $position
      * @param string $type
