@@ -9,6 +9,12 @@ Feature: Identity Map functionality with complex identifiers
     And a new entity "example" of type "stdClass" with the identity of "objectIdentity"
     When I store the entity "example" in the identity map
     Then I can retrieve object "example" by class "stdClass" and the complex identity "objectIdentity"
+
+  Scenario: Register and retrieve a complex object identity
+    Given a new IdentityMap with an IdentitySerializer
+    And a new complex identity "objectIdentity" of type "stdClass" and value '{"foo":"bar","baz":"tab"}'
+    And a new entity "example" of type "stdClass" with the identity of "objectIdentity"
+    When I store the entity "example" in the identity map
     And I can retrieve complex identity "objectIdentity" by object "example"
 
   Scenario: Check for non registered objects with complex object identity
