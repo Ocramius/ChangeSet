@@ -62,7 +62,7 @@ Feature: UnitOfWork keeps track of the order of operations
     When I commit
     Then there are 2 objects in the commit operations
     And the operation 0 is a "remove" of object "example2"
-    And the operation 0 is a "remove" of object "example"
+    And the operation 0 is a "remove" of object "example1"
 
   Scenario: Register and change a single entity
     Given a new UnitOfWork
