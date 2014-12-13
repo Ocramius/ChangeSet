@@ -41,6 +41,7 @@ class IdentityMapContext implements Context, SnippetAcceptingContext
      * @Given a new entity :name of type :className with identity :identity
      *
      * @param string $name
+     * @param string $className
      * @param string $identity
      */
     public function aNewEntityWithIdentity($name, $className, $identity)
