@@ -18,3 +18,5 @@ Feature: Identity Map basic functionality
     Then I cannot retrieve object "another-example" by class "stdClass" and identity "123"
     And I cannot retrieve object "example" by class "anotherClass" and identity "123"
     And I cannot retrieve object "example" by class "stdClass" and identity "456"
+
+# @TODO add scenarios for fetching identifiers and for bulk API calls
