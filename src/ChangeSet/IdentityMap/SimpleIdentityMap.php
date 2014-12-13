@@ -13,7 +13,7 @@ class SimpleIdentityMap
     const IDENTITY_DELIMITER = '#';
 
     private $identitysByObjectHashMap = array();
-    private $objectsByIdentifierMap     = array();
+    private $objectsByIdentityMap     = array();
 
     public function add($object, $identity = null)
     {
@@ -26,11 +26,11 @@ class SimpleIdentityMap
         $class = get_class($object); // @todo introduce something to resolve the correct class name instead, as `get_class` is too naive
 
         if (null === $identity) {
-            $computedIdentifier = $object->identity;  // @todo introduce identity extractor/hasher here
+            $computedIdentity = $object->identity;  // @todo introduce identity extractor/hasher here
 
-            $this->identitysByObjectHashMap[$oid]                                                = $computedIdentifier;
-            $this->identitysByObjectHashMap[$oid]                                                = $computedIdentifier;
-            $this->objectsByIdentifierMap[$class . self::IDENTITY_DELIMITER . $computedIdentifier] = $object;
+            $this->identitysByObjectHashMap[$oid]                                                = $computedIdentity;
+            $this->identitysByObjectHashMap[$oid]                                                = $computedIdentity;
+            $this->objectsByIdentityMap[$class . self::IDENTITY_DELIMITER . $computedIdentity] = $object;
 
             return true; // @todo add different return type for already present values
         }
@@ -38,7 +38,7 @@ class SimpleIdentityMap
 
         // @todo hash the identity here
         $this->identitysByObjectHashMap[$oid]                                                = $identity;
-        $this->objectsByIdentifierMap[$class . self::IDENTITY_DELIMITER . $identity] = $object;
+        $this->objectsByIdentityMap[$class . self::IDENTITY_DELIMITER . $identity] = $object;
 
         return true; // @todo add different return type for already present values
     }
@@ -55,26 +55,26 @@ class SimpleIdentityMap
         $identity = $this->identitysByObjectHashMap[$oid];
 
         unset(
-            $this->objectsByIdentifierMap[get_class($object) . self::IDENTITY_DELIMITER . $identity],
+            $this->objectsByIdentityMap[get_class($object) . self::IDENTITY_DELIMITER . $identity],
             $this->identitysByObjectHashMap[$oid]
         );
 
         return true;
     }
 
-    public function removeByIdentifier($className, $identity)
+    public function removeByIdentity($className, $identity)
     {
         // @todo hash the identity here
         $identityIndex = $className . self::IDENTITY_DELIMITER . $identity;
 
-        if (! isset($this->objectsByIdentifierMap[$identityIndex])) {
+        if (! isset($this->objectsByIdentityMap[$identityIndex])) {
             return false;
         }
 
-        $oid = spl_object_hash($this->objectsByIdentifierMap[$identityIndex]);
+        $oid = spl_object_hash($this->objectsByIdentityMap[$identityIndex]);
 
         unset(
-            $this->objectsByIdentifierMap[$identityIndex],
+            $this->objectsByIdentityMap[$identityIndex],
             $this->identitysByObjectHashMap[$oid]
         );
 
@@ -89,7 +89,7 @@ class SimpleIdentityMap
      */
     public function getObject($className, $identity)
     {
-        return $this->objectsByIdentifierMap[$className . self::IDENTITY_DELIMITER . $identity];
+        return $this->objectsByIdentityMap[$className . self::IDENTITY_DELIMITER . $identity];
     }
 
     /**
@@ -119,6 +119,6 @@ class SimpleIdentityMap
      */
     public function hasIdentity($className, $identity)
     {
-        return isset($this->objectsByIdentifierMap[$className . self::IDENTITY_DELIMITER . $identity]);
+        return isset($this->objectsByIdentityMap[$className . self::IDENTITY_DELIMITER . $identity]);
     }
 }
