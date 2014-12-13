@@ -15,12 +15,18 @@ Feature: Identity Map basic functionality
     When I store the entity "example" in the identity map
     And I can retrieve identity "123" by object "example"
 
-  Scenario: Check for non registered objects
+  Scenario: Check for non registered objects against the identity map
     Given a new IdentityMap with an IdentitySerializer
     And a new entity "example" of type "stdClass" with identity "123"
     And a new entity "another-example" of type "stdClass" with identity "123"
     When I store the entity "example" in the identity map
     Then I cannot retrieve object "another-example" by class "stdClass" and identity "123"
+
+  Scenario: Check for non registered objects
+    Given a new IdentityMap with an IdentitySerializer
+    And a new entity "example" of type "stdClass" with identity "123"
+    And a new entity "another-example" of type "stdClass" with identity "123"
+    When I store the entity "example" in the identity map
     And I cannot retrieve object "example" by class "anotherClass" and identity "123"
     And I cannot retrieve object "example" by class "stdClass" and identity "456"
 
