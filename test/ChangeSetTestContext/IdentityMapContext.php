@@ -30,24 +30,24 @@ class IdentityMapContext implements Context, SnippetAcceptingContext
     private $identityMap;
 
     /**
-     * @Given a new IdentityMap with an IdentifierSerializer
+     * @Given a new IdentityMap with an IdentitySerializer
      */
-    public function aNewIdentitymapWithAnIdentifierserializer()
+    public function aNewIdentitymapWithAnIdentityserializer()
     {
         $this->identityMap = new SimpleIdentityMap();
     }
 
     /**
-     * @Given a new entity :name of type :className with identifier :identifier
+     * @Given a new entity :name of type :className with identity :identity
      *
      * @param string $name
-     * @param string $identifier
+     * @param string $identity
      */
-    public function aNewEntityWithIdentifier($name, $className, $identifier)
+    public function aNewEntityWithIdentity($name, $className, $identity)
     {
         $object = new $className;
 
-        $object->identifier = $identifier;
+        $object->identity = $identity;
 
         $this->objects[$name] = $object;
     }
@@ -63,54 +63,54 @@ class IdentityMapContext implements Context, SnippetAcceptingContext
     }
 
     /**
-     * @When I store the entity :name in the identity map with identifier :name
+     * @When I store the entity :name in the identity map with identity :name
      *
      * @param string $name
-     * @param string $identifier
+     * @param string $identity
      */
-    public function iStoreTheEntityInTheIdentityMapWithIdentifier($name, $identifier)
+    public function iStoreTheEntityInTheIdentityMapWithIdentity($name, $identity)
     {
-        $this->identityMap->add($this->objects[$name], $identifier);
+        $this->identityMap->add($this->objects[$name], $identity);
     }
 
     /**
-     * @Then I can retrieve object :name by class :className and identifier :identifier
+     * @Then I can retrieve object :name by class :className and identity :identity
      *
      * @param string $name
      * @param string $className
-     * @param string $identifier
+     * @param string $identity
      */
-    public function iCanRetrieveObjectByIdentifier($name, $className, $identifier)
+    public function iCanRetrieveObjectByIdentity($name, $className, $identity)
     {
-        if ($this->objects[$name] !== $this->identityMap->getObject($className, $identifier)) {
-            $object = $this->identityMap->getObject($className, $identifier);
+        if ($this->objects[$name] !== $this->identityMap->getObject($className, $identity)) {
+            $object = $this->identityMap->getObject($className, $identity);
 
             throw new UnexpectedValueException(sprintf(
                 'Could not find object matching "%s" of type "%s" with identity "%s": "%s" found instead',
                 $name,
                 $className,
-                $identifier,
+                $identity,
                 $object ? get_class($object) : null
             ));
         }
     }
 
     /**
-     * @Then I can retrieve identifier :identifier by object :name
+     * @Then I can retrieve identity :identity by object :name
      *
-     * @param string $identifier
+     * @param string $identity
      * @param string $name
      */
-    public function iCanRetrieveIdentifierByObject($identifier, $name)
+    public function iCanRetrieveIdentityByObject($identity, $name)
     {
-        if ($identifier !== $this->identityMap->getIdentity($this->objects[$name])) {
+        if ($identity !== $this->identityMap->getIdentity($this->objects[$name])) {
             $identity = $this->identityMap->getIdentity($this->objects[$name]);
 
             throw new UnexpectedValueException(sprintf(
                 'Could not find identity "%s" matching object "%s": "%s" found instead',
-                $identifier,
+                $identity,
                 $name,
-                gettype($identity)
+                gettype()
             ));
         }
     }
