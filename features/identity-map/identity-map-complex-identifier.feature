@@ -64,5 +64,3 @@ Feature: Identity Map functionality with complex identifiers
     And a new entity "example" of type "stdClass" with the identity of "objectIdentity1"
     When I store the entity "example" in the identity map
     Then I cannot retrieve object "example" by class "BaseEntity" and the complex identity "objectIdentity2"
-
-# @TODO add scenarios for fetching identifiers and for bulk API calls
