@@ -25,6 +25,13 @@ Feature: Identity Map functionality with complex identifiers
     When I store the entity "example" in the identity map
     Then I cannot retrieve object "example" by class "stdClass" and the complex identity "objectIdentity2"
 
+  Scenario: Cannot fetch an object by same object identity and different type
+    Given a new IdentityMap with an IdentitySerializer
+    And a new complex identity "objectIdentity1" of type "stdClass" and value '{"foo":"bar","baz":"tab"}'
+    And a new entity "example" with the identity of "objectIdentity1"
+    When I store the entity "example" in the identity map
+    Then I cannot retrieve object "example" by class "anotherClass" and the complex identity "objectIdentity1"
+
   Scenario: Check for non registered objects with complex object identity
     Given a new IdentityMap with an IdentitySerializer
     And a new complex identity "objectIdentity1" of type "stdClass" and value '{"foo":"bar","baz":"tab"}'
