@@ -89,7 +89,9 @@ class SimpleIdentityMap
      */
     public function getObject($className, $identity)
     {
-        return $this->objectsByIdentityMap[$className . self::IDENTITY_DELIMITER . $identity];
+        $identityIndex = $className . self::IDENTITY_DELIMITER . $identity;
+
+        return isset($this->objectsByIdentityMap[$identityIndex]) ? $this->objectsByIdentityMap[$identityIndex] : null;
     }
 
     /**
