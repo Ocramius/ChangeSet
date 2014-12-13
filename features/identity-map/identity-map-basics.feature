@@ -8,6 +8,11 @@ Feature: Identity Map basic functionality
     And a new entity "example" of type "stdClass" with identity "123"
     When I store the entity "example" in the identity map
     Then I can retrieve object "example" by class "stdClass" and identity "123"
+
+  Scenario: Register an object and retrieve its identity
+    Given a new IdentityMap with an IdentitySerializer
+    And a new entity "example" of type "stdClass" with identity "123"
+    When I store the entity "example" in the identity map
     And I can retrieve identity "123" by object "example"
 
   Scenario: Check for non registered objects
