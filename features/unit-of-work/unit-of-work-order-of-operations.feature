@@ -10,7 +10,7 @@ Feature: UnitOfWork keeps track of the order of operations
     Then there is 1 object in the commit operations
     And the operation 0 is an "insert" of object "example"
 
-  Scenario: Commit a single persisted entity
+  Scenario: Commit multiple persisted entities
     Given a new UnitOfWork
     And a new object "example1"
     And a new object "example2"
@@ -21,7 +21,7 @@ Feature: UnitOfWork keeps track of the order of operations
     And the operation 0 is an "insert" of object "example1"
     And the operation 1 is an "insert" of object "example2"
 
-  Scenario: Commit a single persisted entity
+  Scenario: Commit multiple persisted entities in reverse order
     Given a new UnitOfWork
     And a new object "example1"
     And a new object "example2"
@@ -32,7 +32,7 @@ Feature: UnitOfWork keeps track of the order of operations
     And the operation 0 is an "insert" of object "example2"
     And the operation 1 is an "insert" of object "example1"
 
-  Scenario: Commit a single persisted entity
+  Scenario: Commit and remove a single entity
     Given a new UnitOfWork
     And a new object "example1"
     And a new object "example2"
