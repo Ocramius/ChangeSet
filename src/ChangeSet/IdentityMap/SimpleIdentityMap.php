@@ -111,7 +111,9 @@ class SimpleIdentityMap
      */
     public function getIdentity($object)
     {
-        return $this->identitysByObjectHashMap[spl_object_hash($object)];
+        $oid = spl_object_hash($object);
+
+        return isset($this->identitysByObjectHashMap[$oid]) ? $this->identitysByObjectHashMap[$oid] : null;
     }
 
     /**
