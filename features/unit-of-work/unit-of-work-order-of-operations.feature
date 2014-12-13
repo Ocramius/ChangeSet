@@ -51,6 +51,20 @@ Feature: UnitOfWork keeps track of the order of operations
     And the operation 0 is a "insert" of object "example1"
     And the operation 1 is a "remove" of object "example1"
 
+  Scenario: Persist, remove, re-persist and re-remove a single entity
+    Given a new UnitOfWork
+    And a new object "example1"
+    And I persist the object "example1"
+    And I remove the object "example1"
+    And I persist the object "example1"
+    And I remove the object "example1"
+    When I commit
+    Then there are 4 objects in the commit operations
+    And the operation 0 is a "insert" of object "example1"
+    And the operation 1 is a "remove" of object "example1"
+    And the operation 2 is a "insert" of object "example1"
+    And the operation 3 is a "remove" of object "example1"
+
   Scenario: Register and remove a single entity
     Given a new UnitOfWork
     And a new object "example1"
