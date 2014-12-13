@@ -33,5 +33,3 @@ Feature: Identity Map basic functionality
     And a new entity "example" of type "stdClass" with identity "123"
     When I store the entity "example" in the identity map
     And I cannot retrieve object "example" by class "stdClass" and identity "456"
-
-# @TODO add scenarios for fetching identifiers and for bulk API calls
