@@ -2,7 +2,7 @@ Feature: UnitOfWork keeps track of the order of operations
   In order to correctly order dependent operations
   A UnitOfWork must keep track of executed operations
 
-  Scenario: Commit a single persisted entity
+  Scenario: Single persisted entity
     Given a new UnitOfWork
     And a new object "example"
     And I persist the object "example"
@@ -10,7 +10,7 @@ Feature: UnitOfWork keeps track of the order of operations
     Then there is 1 object in the commit operations
     And the operation 0 is an "insert" of object "example"
 
-  Scenario: Commit multiple persisted entities
+  Scenario: Multiple persisted entities
     Given a new UnitOfWork
     And a new object "example1"
     And a new object "example2"
@@ -21,7 +21,7 @@ Feature: UnitOfWork keeps track of the order of operations
     And the operation 0 is an "insert" of object "example1"
     And the operation 1 is an "insert" of object "example2"
 
-  Scenario: Commit multiple persisted entities in reverse order
+  Scenario: Multiple persisted entities in reverse order
     Given a new UnitOfWork
     And a new object "example1"
     And a new object "example2"
@@ -41,7 +41,7 @@ Feature: UnitOfWork keeps track of the order of operations
     Then there is 1 object in the commit operations
     And the operation 0 is an "insert" of object "example1"
 
-  Scenario: Commit and remove a single entity
+  Scenario: Persist and remove a single entity
     Given a new UnitOfWork
     And a new object "example1"
     And I persist the object "example1"
