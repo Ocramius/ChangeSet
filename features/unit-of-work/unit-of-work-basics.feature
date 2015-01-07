@@ -7,7 +7,7 @@ Feature: UnitOfWork Object States
     And a new object "example"
     When I persist the object "example"
     Then the object "example" must be managed by the UnitOfWork
-    And the object "example1" must be marked as "new"
+    And the object "example" must be marked as "new"
 
   Scenario: Persist and immediately remove an entity
     Given a new UnitOfWork
