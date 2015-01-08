@@ -35,7 +35,7 @@ Feature: UnitOfWork Commits
     And a new object "example1"
     And a new object "example2"
     And I register the object "example1"
-    And I register the object "example1"
+    And I register the object "example2"
     And I remove the object "example1"
     And I remove the object "example2"
     When I commit
