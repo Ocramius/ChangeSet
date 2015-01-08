@@ -50,7 +50,7 @@ Feature: UnitOfWork Object States
     When I register the object "example"
     And I remove the object "example"
     Then the object "example" must be managed by the UnitOfWork
-    And the object "example1" must be marked as "removed"
+    And the object "example" must be marked as "removed"
 
   Scenario: Register multiple entities
     Given a new UnitOfWork
