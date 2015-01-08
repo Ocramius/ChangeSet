@@ -7,6 +7,7 @@ use Behat\Behat\Context\SnippetAcceptingContext;
 use Behat\Behat\Tester\Exception\PendingException;
 use ChangeSet\Committer\SimpleLoggingCommitter;
 use ChangeSet\UnitOfWork\SimpleUnitOfWork;
+use ChangeSet\UnitOfWork\UnitOfWorkInterface;
 use LogicException;
 use stdClass;
 use UnexpectedValueException;
@@ -102,7 +103,22 @@ class UnitOfWorkContext implements Context, SnippetAcceptingContext
      */
     public function theObjectMustBeMarkedAs($name, $state)
     {
-        throw new PendingException;
+        $computedState = $this->unitOfWork->getState($this->objects[$name]);
+        $expected      = [
+            'new'       => UnitOfWorkInterface::STATE_NEW,
+            'managed'   => UnitOfWorkInterface::STATE_MANAGED,
+            'removed'   => UnitOfWorkInterface::STATE_REMOVED,
+            'unmanaged' => UnitOfWorkInterface::STATE_UNMANAGED,
+        ];
+
+        if ($expected[$state] !== $computedState) {
+            throw new UnexpectedValueException(sprintf(
+                'Expected UnitOfWork\'s state for object object "%s" to be "%s", "%s" found instead',
+                $name,
+                $state,
+                array_flip($expected)[$computedState]
+            ));
+        }
     }
 
     /**

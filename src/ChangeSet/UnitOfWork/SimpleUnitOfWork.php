@@ -78,4 +78,25 @@ class SimpleUnitOfWork implements UnitOfWorkInterface
     {
         return $this->changeMap->isTracking($object);
     }
+
+    public function getState($object)
+    {
+        foreach ($this->changeMap->getNew() as $new) {
+            if ($object === $new->getObject()) {
+                return self::STATE_NEW;
+            }
+        }
+
+        foreach ($this->changeMap->getRemoved() as $removed) {
+            if ($object === $removed->getObject()) {
+                return self::STATE_REMOVED;
+            }
+        }
+
+        if ($this->changeMap->isTracking($object)) {
+            return self::STATE_MANAGED;
+        }
+
+        return self::STATE_UNMANAGED;
+    }
 }
