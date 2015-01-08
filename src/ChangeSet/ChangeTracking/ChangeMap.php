@@ -84,6 +84,12 @@ class ChangeMap
 
         $change = $this->changeGenerator->getChange($object)->takeSnapshot();
 
+        if (isset($this->newInstances[$hash])) {
+            unset($this->newInstances[$hash]);
+
+            return $change;
+        }
+
         unset($this->newInstances[$hash], $this->managedInstances[$hash]);
 
         // @todo if a new instance is found, should we schedule this one for removal or just
