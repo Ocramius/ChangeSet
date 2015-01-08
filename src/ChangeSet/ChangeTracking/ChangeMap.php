@@ -50,7 +50,13 @@ class ChangeMap
 
         $change = $this->changeGenerator->getChange($object);
 
-        unset($this->removedInstances[$hash]);
+        if (isset($this->removedInstances[$hash])) {
+            unset($this->removedInstances[$hash]);
+
+            $this->managedInstances[$hash] = $change;
+
+            return $change;
+        }
 
         $this->newInstances[$hash] = $change;
 

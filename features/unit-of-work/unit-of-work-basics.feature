@@ -75,7 +75,7 @@ Feature: UnitOfWork Object States
     And I remove the object "example"
     And I persist the object "example"
     And the object "example" must be managed by the UnitOfWork
-    And the object "example" must be marked as "removed"
+    And the object "example" must be marked as "managed"
 
   Scenario: Remove and immediately manage an entity
     Given a new UnitOfWork
@@ -84,6 +84,6 @@ Feature: UnitOfWork Object States
     And I remove the object "example"
     And I register the object "example"
     And the object "example" must be managed by the UnitOfWork
-    And the object "example" must be marked as "removed"
+    And the object "example" must be marked as "managed"
 
 
