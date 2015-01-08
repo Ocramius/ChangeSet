@@ -27,6 +27,8 @@ class SimpleUnitOfWork implements UnitOfWorkInterface
                 ['object' => $object, 'change' => $change]
             );
         }
+
+        return (bool) $change;
     }
 
     public function registerNew($object)
@@ -38,6 +40,8 @@ class SimpleUnitOfWork implements UnitOfWorkInterface
                 ['object' => $object, 'change' => $change]
             );
         }
+
+        return (bool) $change;
     }
 
     public function registerRemoved($object)
@@ -49,6 +53,8 @@ class SimpleUnitOfWork implements UnitOfWorkInterface
                 ['object' => $object, 'change' => $change]
             );
         }
+
+        return (bool) $change;
     }
 
     public function commit(CommitterInterface $committer)
