@@ -78,7 +78,9 @@ class ChangeMap
     {
         $hash = spl_object_hash($object);
 
-        if (isset($this->removedInstances[$hash])) {
+        if (isset($this->removedInstances[$hash])
+            || ! (isset($this->managedInstances[$hash]) || isset($this->newInstances[$hash]))
+        ) {
             return null;
         }
 
