@@ -128,9 +128,7 @@ class UnitOfWorkContext implements Context, SnippetAcceptingContext
      */
     public function iCannotRemoveTheObject($name)
     {
-        try {
-            $this->unitOfWork->registerRemoved($this->objects[$name]);
-        } catch (\InvalidArgumentException $e) {
+        if (! $this->unitOfWork->registerRemoved($this->objects[$name])) {
             return;
         }
 
