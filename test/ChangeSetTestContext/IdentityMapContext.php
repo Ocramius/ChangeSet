@@ -19,6 +19,11 @@ class IdentityMapContext implements Context, SnippetAcceptingContext
     private $objects = [];
 
     /**
+     * @var object[]|array[]
+     */
+    private $identities = [];
+
+    /**
      * @var SimpleIdentityMap|null
      */
     private $identityMap;
@@ -49,6 +54,34 @@ class IdentityMapContext implements Context, SnippetAcceptingContext
         $object->identity = $identity;
 
         $this->objects[$name] = $object;
+    }
+
+    /**
+     * @Given a new complex identity :name of type :type and value :value
+     *
+     * @param string $name
+     * @param string $type
+     * @param string $value
+     */
+    public function aNewComplexIdentity($name, $type, $value)
+    {
+        if ('array' === strtolower($type)) {
+            $this->identities[$type] = json_decode($value);
+
+            return;
+        }
+
+        if (! class_exists($type)) {
+            eval('class ' . $type . ' {}');
+        }
+
+        $identity = new $type;
+
+        foreach (json_decode($value) as $key => $value) {
+            $identity->$key = $value;
+        }
+
+        $this->identities[$name] = $identity;
     }
 
     /**
