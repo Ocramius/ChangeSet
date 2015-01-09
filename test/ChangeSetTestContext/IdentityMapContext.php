@@ -40,6 +40,10 @@ class IdentityMapContext implements Context, SnippetAcceptingContext
      */
     public function aNewEntityWithIdentity($name, $className, $identity)
     {
+        if (! class_exists($className)) {
+            eval('class ' . $className . ' {}');
+        }
+
         $object = new $className;
 
         $object->identity = $identity;
