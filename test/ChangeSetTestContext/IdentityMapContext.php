@@ -85,6 +85,26 @@ class IdentityMapContext implements Context, SnippetAcceptingContext
     }
 
     /**
+     * @Given a new entity :name of type :type with the identity of :identityName
+     *
+     * @param string $name
+     * @param string $type
+     * @param string $identityName
+     */
+    public function aNewEntityWithTheIdentity($name, $type, $identityName)
+    {
+        if (! class_exists($type)) {
+            eval('class ' . $type . ' {}');
+        }
+
+        $entity = new $type;
+
+        $entity->identity = $this->identities[$identityName];
+
+        $this->objects[$name] = $entity;
+    }
+
+    /**
      * @When I store the entity :name in the identity map
      *
      * @param string $name
