@@ -31,7 +31,7 @@ class IdentityMapContext implements Context, SnippetAcceptingContext
     /**
      * @Given a new IdentityMap with an IdentitySerializer
      */
-    public function aNewIdentitymapWithAnIdentityserializer()
+    public function aNewIdentityMapWithAnIdentitySerializer()
     {
         $this->identityMap = new SimpleIdentityMap();
     }
@@ -66,7 +66,7 @@ class IdentityMapContext implements Context, SnippetAcceptingContext
     public function aNewComplexIdentity($name, $type, $value)
     {
         if ('array' === strtolower($type)) {
-            $this->identities[$type] = json_decode($value);
+            $this->identities[$name] = json_decode($value);
 
             return;
         }
@@ -98,7 +98,6 @@ class IdentityMapContext implements Context, SnippetAcceptingContext
         }
 
         $entity = new $type;
-
         $entity->identity = $this->identities[$identityName];
 
         $this->objects[$name] = $entity;
@@ -181,7 +180,7 @@ class IdentityMapContext implements Context, SnippetAcceptingContext
                 'Could not find identity "%s" matching object "%s": "%s" found instead',
                 $identity,
                 $name,
-                gettype()
+                gettype($identity)
             ));
         }
     }
