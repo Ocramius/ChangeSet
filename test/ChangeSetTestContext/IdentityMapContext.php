@@ -31,7 +31,7 @@ class IdentityMapContext implements Context, SnippetAcceptingContext
     /**
      * @Given a new IdentityMap with an IdentitySerializer
      */
-    public function aNewIdentitymapWithAnIdentityserializer()
+    public function aNewIdentityMapWithAnIdentitySerializer()
     {
         $this->identityMap = new SimpleIdentityMap();
     }
@@ -181,7 +181,7 @@ class IdentityMapContext implements Context, SnippetAcceptingContext
                 'Could not find identity "%s" matching object "%s": "%s" found instead',
                 $identity,
                 $name,
-                gettype()
+                gettype($identity)
             ));
         }
     }
