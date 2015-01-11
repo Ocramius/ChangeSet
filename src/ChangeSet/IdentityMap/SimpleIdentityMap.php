@@ -25,8 +25,7 @@ class SimpleIdentityMap
         if (null === $identity) {
             $computedIdentity = $object->identity;  // @todo introduce identity extractor/hasher here
 
-            $this->identitysByObjectHashMap[$oid]                                                = $computedIdentity;
-            $this->identitysByObjectHashMap[$oid]                                                = $computedIdentity;
+            $this->identitysByObjectHashMap[$oid]                                              = $computedIdentity;
             $this->objectsByIdentityMap[$class . self::IDENTITY_DELIMITER . $computedIdentity] = $object;
 
             return true; // @todo add different return type for already present values
