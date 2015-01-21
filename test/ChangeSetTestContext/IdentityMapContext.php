@@ -5,6 +5,7 @@ namespace ChangeSetTestContext;
 use Behat\Behat\Context\Context;
 use Behat\Behat\Context\SnippetAcceptingContext;
 use ChangeSet\IdentityMap\SimpleIdentityMap;
+use ChangeSetTestAsset\Stub\SampleIdentityExtractor;
 use stdClass;
 use UnexpectedValueException;
 
@@ -33,7 +34,9 @@ class IdentityMapContext implements Context, SnippetAcceptingContext
      */
     public function aNewIdentityMapWithAnIdentitySerializer()
     {
-        $this->identityMap = new SimpleIdentityMap();
+        $this->identityMap = new SimpleIdentityMap(
+            new SampleIdentityExtractor()
+        );
     }
 
     /**
@@ -57,6 +60,21 @@ class IdentityMapContext implements Context, SnippetAcceptingContext
     }
 
     /**
+     * @Given a new entity :name with the identity of :identity
+     *
+     * @param string $name
+     * @param string $identity
+     */
+    public function aNewEntityWithTheIdentityOf($name, $identity)
+    {
+        $object = new stdClass();
+
+        $object->identity = $this->identities[$identity];
+
+        $this->objects[$name] = $object;
+    }
+
+    /**
      * @Given a new complex identity :name of type :type and value :value
      *
      * @param string $name
@@ -66,7 +84,7 @@ class IdentityMapContext implements Context, SnippetAcceptingContext
     public function aNewComplexIdentity($name, $type, $value)
     {
         if ('array' === strtolower($type)) {
-            $this->identities[$name] = json_decode($value);
+            $this->identities[$name] = json_decode($value, true);
 
             return;
         }
@@ -77,7 +95,7 @@ class IdentityMapContext implements Context, SnippetAcceptingContext
 
         $identity = new $type;
 
-        foreach (json_decode($value) as $key => $value) {
+        foreach (json_decode($value, true) as $key => $value) {
             $identity->$key = $value;
         }
 
@@ -147,6 +165,144 @@ class IdentityMapContext implements Context, SnippetAcceptingContext
     }
 
     /**
+     * @Then I can retrieve object :name by class :className and the complex identity :identityName
+     *
+     * @param string $name
+     * @param string $className
+     * @param string $identityName
+     */
+    public function iCanRetrieveObjectByClassAndComplexIdentity($name, $className, $identityName)
+    {
+        if ($this->objects[$name] !== $this->identityMap->getObject($className, $this->identities[$identityName])) {
+            $object = $this->identityMap->getObject($className, $this->identities[$identityName]);
+
+            throw new UnexpectedValueException(sprintf(
+                'Could not find object matching "%s" of type "%s" with identity "%s": "%s" found instead',
+                $name,
+                $className,
+                var_export($this->identities[$identityName], true),
+                $object ? get_class($object) : null
+            ));
+        }
+    }
+
+    /**
+     * @Then I cannot retrieve object :name by class :className and the complex identity :identityName
+     *
+     * @param string $name
+     * @param string $className
+     * @param string $identityName
+     */
+    public function iCannotRetrieveObjectByClassAndComplexIdentity($name, $className, $identityName)
+    {
+        /*if (! $this->identityMap->hasIdentity($className, $this->identities[$identityName])) {
+            // assumes that no other object with the same identity is stored in the identity map
+            throw new UnexpectedValueException(sprintf(
+                'Identity "%s" was not expected to be found in the identity map',
+                $identityName
+            ));
+        }*/
+
+        if ($this->objects[$name] === $this->identityMap->getObject($className, $this->identities[$identityName])) {
+            throw new UnexpectedValueException(sprintf(
+                'Object "%s" of type "%s" was not expected to be found via identity "%s"',
+                $name,
+                $className,
+                $identityName
+            ));
+        }
+    }
+
+    /**
+     * @Then identity :identityName of type :className does exist in the identity map
+     *
+     * @param string $identityName
+     * @param string $className
+     */
+    public function identityOfTypeDoesExistInTheIdentityMap($identityName, $className)
+    {
+        if (! $this->identityMap->hasIdentity($className, $identityName)) {
+            throw new UnexpectedValueException(sprintf(
+                'Identity "%s" was expected to exist in the identity map',
+                $identityName
+            ));
+        }
+    }
+
+    /**
+     * @Then identity :identityName of type :className does not exist in the identity map
+     *
+     * @param string $identityName
+     * @param string $className
+     */
+    public function identityOfTypeDoesNotExistInTheIdentityMap($identityName, $className)
+    {
+        if ($this->identityMap->hasIdentity($className, $identityName)) {
+            throw new UnexpectedValueException(sprintf(
+                'Identity "%s" was not expected to exist in the identity map',
+                $identityName
+            ));
+        }
+    }
+
+    /**
+     * @Then object :name does exist in the identity map
+     *
+     * @param string $name
+     */
+    public function objectDoesExistInTheIdentityMap($name)
+    {
+        if (! $this->identityMap->hasObject($this->objects[$name])) {
+            throw new UnexpectedValueException(sprintf(
+                'Object "%s" was expected to exist in the identity map',
+                $name
+            ));
+        }
+    }
+
+    /**
+     * @Then object :name does not exist in the identity map
+     *
+     * @param string $name
+     */
+    public function objectDoesNotExistInTheIdentityMap($name)
+    {
+        if ($this->identityMap->hasObject($this->objects[$name])) {
+            throw new UnexpectedValueException(sprintf(
+                'Object "%s" was not expected to exist in the identity map',
+                $name
+            ));
+        }
+    }
+
+    /**
+     * @Then I can retrieve complex identity :identityName by object :objectName
+     *
+     * @param string $identityName
+     * @param string $objectName
+     */
+    public function iCanRetrieveComplexIdentityByObject($identityName, $objectName)
+    {
+        if (! $this->identityMap->hasObject($this->objects[$objectName])) {
+            throw new UnexpectedValueException(sprintf(
+                'Object "%s" could not be found in the identity map',
+                $objectName
+            ));
+        }
+
+        if ($this->identities[$identityName] != $this->identityMap->getIdentity($this->objects[$objectName])) {
+            $identity = $this->identityMap->getIdentity($this->objects[$objectName]);
+
+            throw new UnexpectedValueException(sprintf(
+                'Could not find identity matching object "%s" of type "%s": "%s" found instead',
+                $objectName,
+                get_class($this->objects[$objectName]),
+                var_export($identity, true)
+            ));
+        }
+    }
+
+    /**
      * @Then I cannot retrieve object :name by class :className and identity :identity
      *
      * @param string $name
@@ -181,6 +337,57 @@ class IdentityMapContext implements Context, SnippetAcceptingContext
                 $identity,
                 $name,
                 gettype($identity)
+            ));
+        }
+    }
+
+    /**
+     * @Then I cannot retrieve identity :identity by object :name
+     *
+     * @param string $identity
+     * @param string $name
+     */
+    public function iCannotRetrieveIdentityByObject($identity, $name)
+    {
+        if ($identity == $this->identityMap->getIdentity($this->objects[$name])) {
+            $identity = $this->identityMap->getIdentity($this->objects[$name]);
+
+            throw new UnexpectedValueException(sprintf(
+                'Wasn\'t expecting to find identity "%s" matching object "%s"',
+                $identity,
+                $name
+            ));
+        }
+    }
+
+    /**
+     * @Then I remove the entity :name from the identity map
+     *
+     * @param string $name
+     */
+    public function iRemoveTheEntityFromTheIdentityMap($name)
+    {
+        if (! $this->identityMap->removeObject($this->objects[$name])) {
+            throw new UnexpectedValueException(sprintf(
+                'Could not remove entity "%s" from the identity map: maybe it was already removed?',
+                $name
+            ));
+        }
+    }
+
+    /**
+     * @Then I remove the identity :identity of type :className from the identity map
+     *
+     * @param string $identity
+     * @param string $className
+     */
+    public function iRemoveTheIdentityOfTypeFromTheIdentityMap($identity, $className)
+    {
+        if (! $this->identityMap->removeByIdentity($className, $identity)) {
+            throw new UnexpectedValueException(sprintf(
+                'Could not remove identity "%s" for type "%s" from the identity map: maybe it was already removed?',
+                $identity,
+                $className
             ));
         }
     }

@@ -1,6 +1,7 @@
 <?php
 
 namespace ChangeSet\IdentityMap;
+use ChangeSet\IdentityExtractor\IdentityExtractorInterface;
 
 /**
  * @TODO consider bulk API
@@ -11,6 +12,16 @@ class SimpleIdentityMap
 
     private $identitiesByObjectHashMap = array();
     private $objectsByIdentityMap     = array();
+
+    /**
+     * @var IdentityExtractorInterface
+     */
+    private $identityExtractor;
+
+    public function __construct(IdentityExtractorInterface $identityExtractor)
+    {
+        $this->identityExtractor = $identityExtractor;
+    }
 
     public function add($object, $identity = null)
     {
@@ -23,18 +34,19 @@ class SimpleIdentityMap
         $class = get_class($object); // @todo introduce something to resolve the correct class name instead, as `get_class` is too naive
 
         if (null === $identity) {
-            $computedIdentity = $object->identity;  // @todo introduce identity extractor/hasher here
+            $encodedIdentity  = $this->identityExtractor->getEncodedIdentifier($object);
+            $computedIdentity = $this->identityExtractor->getIdentity($object);
 
-            $this->identitiesByObjectHashMap[$oid]                                              = $computedIdentity;
-            $this->objectsByIdentityMap[$class . self::IDENTITY_DELIMITER . $computedIdentity] = $object;
+            $this->identitiesByObjectHashMap[$oid]                                            = $computedIdentity;
+            $this->objectsByIdentityMap[$class . self::IDENTITY_DELIMITER . $encodedIdentity] = $object;
 
             return true; // @todo add different return type for already present values
         }
 
+        $encodedIdentity = $this->identityExtractor->encodeIdentifier($identity);
 
-        // @todo hash the identity here
-        $this->identitiesByObjectHashMap[$oid]                                                = $identity;
-        $this->objectsByIdentityMap[$class . self::IDENTITY_DELIMITER . $identity] = $object;
+        $this->identitiesByObjectHashMap[$oid]                                            = $identity;
+        $this->objectsByIdentityMap[$class . self::IDENTITY_DELIMITER . $encodedIdentity] = $object;
 
         return true; // @todo add different return type for already present values
     }
@@ -85,7 +97,7 @@ class SimpleIdentityMap
      */
     public function getObject($className, $identity)
     {
-        $identityIndex = $className . self::IDENTITY_DELIMITER . $identity;
+        $identityIndex = $className . self::IDENTITY_DELIMITER . $this->identityExtractor->encodeIdentifier($identity);
 
         return isset($this->objectsByIdentityMap[$identityIndex]) ? $this->objectsByIdentityMap[$identityIndex] : null;
     }
@@ -113,12 +125,15 @@ class SimpleIdentityMap
     }
 
     /**
-     * @param mixed $identity
+     * @param string $className
+     * @param mixed  $identity
      *
      * @return bool
      */
     public function hasIdentity($className, $identity)
     {
-        return isset($this->objectsByIdentityMap[$className . self::IDENTITY_DELIMITER . $identity]);
+        return isset($this->objectsByIdentityMap[
+            $className . self::IDENTITY_DELIMITER . $this->identityExtractor->encodeIdentifier($identity)
+        ]);
     }
 }
