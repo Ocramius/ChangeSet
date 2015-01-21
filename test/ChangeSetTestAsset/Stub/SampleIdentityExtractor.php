@@ -59,6 +59,6 @@ class SampleIdentityExtractor implements IdentityExtractorInterface
             return spl_object_hash($identifier);
         }
 
-        return implode('|', $identifier);
+        return implode('|', (array) $identifier);
     }
 }
