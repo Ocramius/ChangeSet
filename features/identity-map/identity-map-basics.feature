@@ -3,42 +3,39 @@ Feature: Identity Map basic functionality
   An Identity Map should be able to fetch and retrieve objects by identities
   And Identity Map should be able to fetch and retrieve identities by object
 
-  Scenario: Register and retrieve an object
+  Background:
     Given a new IdentityMap with an IdentitySerializer
-    And a new entity "example" of type "stdClass" with identity "123"
+
+  Scenario: Register and retrieve an object
+    Given a new entity "example" of type "stdClass" with identity "123"
     When I store the entity "example" in the identity map
     Then I can retrieve object "example" by class "stdClass" and identity "123"
 
   Scenario: Register an object and retrieve its identity
-    Given a new IdentityMap with an IdentitySerializer
-    And a new entity "example" of type "stdClass" with identity "123"
+    Given a new entity "example" of type "stdClass" with identity "123"
     When I store the entity "example" in the identity map
     Then I can retrieve identity "123" by object "example"
 
   Scenario: Check for non-existing identities
-    Given a new IdentityMap with an IdentitySerializer
-    And a new entity "example" of type "stdClass" with identity "123"
+    Given a new entity "example" of type "stdClass" with identity "123"
     When I store the entity "example" in the identity map
     Then I cannot retrieve identity "456" by object "example"
     And identity "456" of type "stdClass" does not exist
     And identity "123" of type "stdClass" does exist
 
   Scenario: Check for non registered objects against the identity map
-    Given a new IdentityMap with an IdentitySerializer
-    And a new entity "example" of type "stdClass" with identity "123"
+    Given a new entity "example" of type "stdClass" with identity "123"
     And a new entity "another-example" of type "stdClass" with identity "123"
     When I store the entity "example" in the identity map
     Then I cannot retrieve object "another-example" by class "stdClass" and identity "123"
 
   Scenario: Check for registered objects against the identity map by using a different class name
-    Given a new IdentityMap with an IdentitySerializer
-    And a new entity "example" of type "stdClass" with identity "123"
+    Given a new entity "example" of type "stdClass" with identity "123"
     And a new entity "another-example" of type "anotherClass" with identity "123"
     When I store the entity "example" in the identity map
     Then I cannot retrieve object "another-example" by class "anotherClass" and identity "123"
 
   Scenario: Check that objects removed from the identity map cannot be found
-    Given a new IdentityMap with an IdentitySerializer
-    And a new entity "example" of type "stdClass" with identity "123"
+    Given a new entity "example" of type "stdClass" with identity "123"
     When I store the entity "example" in the identity map
     Then I cannot retrieve object "example" by class "stdClass" and identity "456"
