@@ -5,6 +5,7 @@ namespace ChangeSetTestContext;
 use Behat\Behat\Context\Context;
 use Behat\Behat\Context\SnippetAcceptingContext;
 use ChangeSet\IdentityMap\SimpleIdentityMap;
+use ChangeSetTestAsset\Stub\SampleIdentityExtractor;
 use stdClass;
 use UnexpectedValueException;
 
@@ -33,7 +34,9 @@ class IdentityMapContext implements Context, SnippetAcceptingContext
      */
     public function aNewIdentityMapWithAnIdentitySerializer()
     {
-        $this->identityMap = new SimpleIdentityMap();
+        $this->identityMap = new SimpleIdentityMap(
+            new SampleIdentityExtractor()
+        );
     }
 
     /**
