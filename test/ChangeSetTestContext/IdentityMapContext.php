@@ -213,6 +213,13 @@ class IdentityMapContext implements Context, SnippetAcceptingContext
      */
     public function iCanRetrieveComplexIdentityByObject($identityName, $objectName)
     {
+        if (! $this->identityMap->hasObject($this->objects[$objectName])) {
+            throw new UnexpectedValueException(sprintf(
+                'Object "%s" could not be found in the identity map',
+                $objectName
+            ));
+        }
+
         if ($this->identities[$identityName] != $this->identityMap->getIdentity($this->objects[$objectName])) {
             $identity = $this->identityMap->getIdentity($this->objects[$objectName]);
 
