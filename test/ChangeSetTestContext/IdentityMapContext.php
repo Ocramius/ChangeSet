@@ -359,4 +359,36 @@ class IdentityMapContext implements Context, SnippetAcceptingContext
             ));
         }
     }
+
+    /**
+     * @Then I remove the entity :name from the identity map
+     *
+     * @param string $name
+     */
+    public function iRemoveTheEntityFromTheIdentityMap($name)
+    {
+        if (! $this->identityMap->removeObject($this->objects[$name])) {
+            throw new UnexpectedValueException(sprintf(
+                'Could not remove entity "%s" from the identity map: maybe it was already removed?',
+                $name
+            ));
+        }
+    }
+
+    /**
+     * @Then I remove the identity :identity of type :className from the identity map
+     *
+     * @param string $identity
+     * @param string $className
+     */
+    public function iRemoveTheIdentityOfTypeFromTheIdentityMap($identity, $className)
+    {
+        if (! $this->identityMap->removeByIdentity($className, $identity)) {
+            throw new UnexpectedValueException(sprintf(
+                'Could not remove identity "%s" for type "%s" from the identity map: maybe it was already removed?',
+                $identity,
+                $className
+            ));
+        }
+    }
 }

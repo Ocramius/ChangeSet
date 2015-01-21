@@ -50,3 +50,40 @@ Feature: Identity Map basic functionality
   Scenario: Check existence of non registered objects against the identity map
     Given a new entity "example" of type "stdClass" with identity "123"
     Then object "example" does not exist in the identity map
+
+  Scenario: Check that objects removed from the identity map cannot be found
+    Given a new entity "example" of type "stdClass" with identity "123"
+    When I store the entity "example" in the identity map
+    And I remove the entity "example" from the identity map
+    Then I cannot retrieve object "example" by class "stdClass" and identity "123"
+
+  Scenario: Check that objects removed from the identity map do not exist
+    Given a new entity "example" of type "stdClass" with identity "123"
+    When I store the entity "example" in the identity map
+    And I remove the entity "example" from the identity map
+    Then object "example" does not exist in the identity map
+
+  Scenario: Check that identities of objects removed from the identity map cannot be found
+    Given a new entity "example" of type "stdClass" with identity "123"
+    When I store the entity "example" in the identity map
+    And I remove the entity "example" from the identity map
+    Then I cannot retrieve identity "123" by object "example"
+
+  Scenario: Check that identities of objects removed from the identity map do not exist
+    Given a new entity "example" of type "stdClass" with identity "123"
+    When I store the entity "example" in the identity map
+    And I remove the entity "example" from the identity map
+    Then identity "123" of type "example" does not exist in the identity map
+
+  Scenario: Check that objects with identities removed from the identity map cannot be found
+    Given a new entity "example" of type "stdClass" with identity "123"
+    When I store the entity "example" in the identity map
+    And I remove the identity "123" of type "stdClass" from the identity map
+    Then I cannot retrieve object "example" by class "stdClass" and identity "123"
+
+  Scenario: Check that objects with identities removed from the identity map do not exist
+    Given a new entity "example" of type "stdClass" with identity "123"
+    When I store the entity "example" in the identity map
+    And I remove the identity "123" of type "stdClass" from the identity map
+    Then object "example" does not exist in the identity map
+
