@@ -270,4 +270,23 @@ class IdentityMapContext implements Context, SnippetAcceptingContext
             ));
         }
     }
+
+    /**
+     * @Then I cannot retrieve identity :identity by object :name
+     *
+     * @param string $identity
+     * @param string $name
+     */
+    public function iCannotRetrieveIdentityByObject($identity, $name)
+    {
+        if ($identity == $this->identityMap->getIdentity($this->objects[$name])) {
+            $identity = $this->identityMap->getIdentity($this->objects[$name]);
+
+            throw new UnexpectedValueException(sprintf(
+                'Wasn\'t expecting to find identity "%s" matching object "%s"',
+                $identity,
+                $name
+            ));
+        }
+    }
 }
