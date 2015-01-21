@@ -214,12 +214,12 @@ class IdentityMapContext implements Context, SnippetAcceptingContext
     }
 
     /**
-     * @Then identity :identityName of type :className does exist
+     * @Then identity :identityName of type :className does exist in the identity map
      *
      * @param string $identityName
      * @param string $className
      */
-    public function identityOfTypeDoesExist($identityName, $className)
+    public function identityOfTypeDoesExistInTheIdentityMap($identityName, $className)
     {
         if (! $this->identityMap->hasIdentity($className, $identityName)) {
             throw new UnexpectedValueException(sprintf(
@@ -230,17 +230,47 @@ class IdentityMapContext implements Context, SnippetAcceptingContext
     }
 
     /**
-     * @Then identity :identityName of type :className does not exist
+     * @Then identity :identityName of type :className does not exist in the identity map
      *
      * @param string $identityName
      * @param string $className
      */
-    public function identityOfTypeDoesNotExist($identityName, $className)
+    public function identityOfTypeDoesNotExistInTheIdentityMap($identityName, $className)
     {
         if ($this->identityMap->hasIdentity($className, $identityName)) {
             throw new UnexpectedValueException(sprintf(
                 'Identity "%s" was not expected to exist in the identity map',
                 $identityName
+            ));
+        }
+    }
+
+    /**
+     * @Then object :name does exist in the identity map
+     *
+     * @param string $name
+     */
+    public function objectDoesExistInTheIdentityMap($name)
+    {
+        if (! $this->identityMap->hasObject($this->objects[$name])) {
+            throw new UnexpectedValueException(sprintf(
+                'Object "%s" was expected to exist in the identity map',
+                $name
+            ));
+        }
+    }
+
+    /**
+     * @Then object :name does not exist in the identity map
+     *
+     * @param string $name
+     */
+    public function objectDoesNotExistInTheIdentityMap($name)
+    {
+        if ($this->identityMap->hasObject($this->objects[$name])) {
+            throw new UnexpectedValueException(sprintf(
+                'Object "%s" was not expected to exist in the identity map',
+                $name
             ));
         }
     }

@@ -19,12 +19,12 @@ Feature: Identity Map basic functionality
   Scenario: Check for identity existence
     Given a new entity "example" of type "stdClass" with identity "123"
     When I store the entity "example" in the identity map
-    Then identity "123" of type "stdClass" does exist
+    Then identity "123" of type "stdClass" does exist in the identity map
 
   Scenario: Check for identity non-existence
     Given a new entity "example" of type "stdClass" with identity "123"
     When I store the entity "example" in the identity map
-    Then identity "456" of type "stdClass" does not exist
+    Then identity "456" of type "stdClass" does not exist in the identity map
 
   Scenario: Fetch non-existing identity
     Given a new entity "example" of type "stdClass" with identity "123"
@@ -43,7 +43,10 @@ Feature: Identity Map basic functionality
     When I store the entity "example" in the identity map
     Then I cannot retrieve object "another-example" by class "anotherClass" and identity "123"
 
-  Scenario: Check that objects removed from the identity map cannot be found
+  Scenario: Retrieve non registered objects against the identity map
     Given a new entity "example" of type "stdClass" with identity "123"
-    When I store the entity "example" in the identity map
-    Then I cannot retrieve object "example" by class "stdClass" and identity "456"
+    Then I cannot retrieve object "example" by class "stdClass" and identity "123"
+
+  Scenario: Check existence of non registered objects against the identity map
+    Given a new entity "example" of type "stdClass" with identity "123"
+    Then object "example" does not exist in the identity map
