@@ -192,7 +192,7 @@ class IdentityMapContext implements Context, SnippetAcceptingContext
      * @param string $identityName
      * @param string $objectName
      */
-    public function iCanRetrieveComplexIDentityByObject($identityName, $objectName)
+    public function iCanRetrieveComplexIdentityByObject($identityName, $objectName)
     {
         if ($this->identities[$identityName] != $this->identityMap->getIdentity($this->objects[$objectName])) {
             $identity = $this->identityMap->getIdentity($this->objects[$objectName]);
