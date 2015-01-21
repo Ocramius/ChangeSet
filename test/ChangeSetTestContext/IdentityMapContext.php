@@ -60,6 +60,21 @@ class IdentityMapContext implements Context, SnippetAcceptingContext
     }
 
     /**
+     * @Given a new entity :name with the identity of :identity
+     *
+     * @param string $name
+     * @param string $identity
+     */
+    public function aNewEntityWithTheIdentityOf($name, $identity)
+    {
+        $object = new stdClass();
+
+        $object->identity = $this->identities[$identity];
+
+        $this->objects[$name] = $object;
+    }
+
+    /**
      * @Given a new complex identity :name of type :type and value :value
      *
      * @param string $name
