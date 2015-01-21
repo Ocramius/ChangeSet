@@ -187,6 +187,25 @@ class IdentityMapContext implements Context, SnippetAcceptingContext
     }
 
     /**
+     * @Then I cannot retrieve object :name by class :className and the complex identity :identityName
+     *
+     * @param string $name
+     * @param string $className
+     * @param string $identityName
+     */
+    public function iCannotRetrieveObjectByClassAndComplexIdentity($name, $className, $identityName)
+    {
+        if ($this->objects[$name] === $this->identityMap->getObject($className, $this->identities[$identityName])) {
+            throw new UnexpectedValueException(sprintf(
+                'Object "%s" of type "%s" was not expected to be found via identity "%s"',
+                $name,
+                $className,
+                $identityName
+            ));
+        }
+    }
+
+    /**
      * @Then I can retrieve complex identity :identityName by object :objectName
      *
      * @param string $identityName
