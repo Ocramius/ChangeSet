@@ -132,6 +132,8 @@ class SimpleIdentityMap
      */
     public function hasIdentity($className, $identity)
     {
-        return isset($this->objectsByIdentityMap[$className . self::IDENTITY_DELIMITER . $identity]);
+        return isset($this->objectsByIdentityMap[
+            $className . self::IDENTITY_DELIMITER . $this->identityExtractor->encodeIdentifier($identity)
+        ]);
     }
 }
