@@ -195,11 +195,51 @@ class IdentityMapContext implements Context, SnippetAcceptingContext
      */
     public function iCannotRetrieveObjectByClassAndComplexIdentity($name, $className, $identityName)
     {
+        /*if (! $this->identityMap->hasIdentity($className, $this->identities[$identityName])) {
+            // assumes that no other object with the same identity is stored in the identity map
+            throw new UnexpectedValueException(sprintf(
+                'Identity "%s" was not expected to be found in the identity map',
+                $identityName
+            ));
+        }*/
+
         if ($this->objects[$name] === $this->identityMap->getObject($className, $this->identities[$identityName])) {
             throw new UnexpectedValueException(sprintf(
                 'Object "%s" of type "%s" was not expected to be found via identity "%s"',
                 $name,
                 $className,
+                $identityName
+            ));
+        }
+    }
+
+    /**
+     * @Then identity :identityName of type :className does exist
+     *
+     * @param string $identityName
+     * @param string $className
+     */
+    public function identityOfTypeDoesExist($identityName, $className)
+    {
+        if (! $this->identityMap->hasIdentity($className, $identityName)) {
+            throw new UnexpectedValueException(sprintf(
+                'Identity "%s" was expected to exist in the identity map',
+                $identityName
+            ));
+        }
+    }
+
+    /**
+     * @Then identity :identityName of type :className does not exist
+     *
+     * @param string $identityName
+     * @param string $className
+     */
+    public function identityOfTypeDoesNotExist($identityName, $className)
+    {
+        if ($this->identityMap->hasIdentity($className, $identityName)) {
+            throw new UnexpectedValueException(sprintf(
+                'Identity "%s" was not expected to exist in the identity map',
                 $identityName
             ));
         }

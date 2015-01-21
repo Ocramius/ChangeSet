@@ -13,12 +13,15 @@ Feature: Identity Map basic functionality
     Given a new IdentityMap with an IdentitySerializer
     And a new entity "example" of type "stdClass" with identity "123"
     When I store the entity "example" in the identity map
-    And I can retrieve identity "123" by object "example"
+    Then I can retrieve identity "123" by object "example"
 
   Scenario: Check for non-existing identities
     Given a new IdentityMap with an IdentitySerializer
     And a new entity "example" of type "stdClass" with identity "123"
-    And I cannot retrieve identity "456" by object "example"
+    When I store the entity "example" in the identity map
+    Then I cannot retrieve identity "456" by object "example"
+    And identity "456" of type "stdClass" does not exist
+    And identity "123" of type "stdClass" does exist
 
   Scenario: Check for non registered objects against the identity map
     Given a new IdentityMap with an IdentitySerializer
@@ -38,4 +41,4 @@ Feature: Identity Map basic functionality
     Given a new IdentityMap with an IdentitySerializer
     And a new entity "example" of type "stdClass" with identity "123"
     When I store the entity "example" in the identity map
-    And I cannot retrieve object "example" by class "stdClass" and identity "456"
+    Then I cannot retrieve object "example" by class "stdClass" and identity "456"
