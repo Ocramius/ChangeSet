@@ -84,7 +84,7 @@ class IdentityMapContext implements Context, SnippetAcceptingContext
     public function aNewComplexIdentity($name, $type, $value)
     {
         if ('array' === strtolower($type)) {
-            $this->identities[$name] = json_decode($value);
+            $this->identities[$name] = json_decode($value, true);
 
             return;
         }
@@ -95,7 +95,7 @@ class IdentityMapContext implements Context, SnippetAcceptingContext
 
         $identity = new $type;
 
-        foreach (json_decode($value) as $key => $value) {
+        foreach (json_decode($value, true) as $key => $value) {
             $identity->$key = $value;
         }
 
@@ -180,7 +180,7 @@ class IdentityMapContext implements Context, SnippetAcceptingContext
                 'Could not find object matching "%s" of type "%s" with identity "%s": "%s" found instead',
                 $name,
                 $className,
-                $this->identities[$identityName],
+                var_export($this->identities[$identityName], true),
                 $object ? get_class($object) : null
             ));
         }
