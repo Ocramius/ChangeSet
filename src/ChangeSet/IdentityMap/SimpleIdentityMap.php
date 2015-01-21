@@ -125,7 +125,8 @@ class SimpleIdentityMap
     }
 
     /**
-     * @param mixed $identity
+     * @param string $className
+     * @param mixed  $identity
      *
      * @return bool
      */

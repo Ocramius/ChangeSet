@@ -22,13 +22,13 @@ class SampleIdentityExtractor implements IdentityExtractorInterface
         }
 
         if (property_exists($object, 'identity')) {
-            if ($object->identity instanceof \stdClass) {
+            /*if ($object->identity instanceof \stdClass) {
                 return $this->getIdentity($object->identity); // identity depends on another object's identity
-            }
+            }*/
 
-            if (is_object($object->identity)) {
-                //return spl_object_hash($object->identity); // identity is an object (not yet handled)
-            }
+            /*if (is_object($object->identity)) {
+                return spl_object_hash($object->identity); // identity is an object (not yet handled)
+            }*/
 
             return $object->identity;
         }
@@ -55,6 +55,10 @@ class SampleIdentityExtractor implements IdentityExtractorInterface
      */
     public function encodeIdentifier($identifier)
     {
+        if (is_object($identifier)) {
+            return spl_object_hash($identifier);
+        }
+
         return implode('|', $identifier);
     }
 }
