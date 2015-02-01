@@ -30,12 +30,28 @@ class IdentityMapContext implements Context, SnippetAcceptingContext
     private $identityMap;
 
     /**
+     * @var string[]
+     */
+    private $subTypesMap = [];
+
+    /**
+     * @Given a subtype :subType for type :originalType
+     *
+     * @param string $originalType
+     * @param string $subType
+     */
+    public function aSubtypeForType($originalType, $subType)
+    {
+        $this->subTypesMap[$subType] = $originalType;
+    }
+
+    /**
      * @Given a new IdentityMap with an IdentitySerializer
      */
     public function aNewIdentityMapWithAnIdentitySerializer()
     {
         $this->identityMap = new SimpleIdentityMap(
-            new SampleIdentityExtractor()
+            new SampleIdentityExtractor($this->subTypesMap)
         );
     }
 
@@ -48,9 +64,7 @@ class IdentityMapContext implements Context, SnippetAcceptingContext
      */
     public function aNewEntityWithIdentity($name, $className, $identity)
     {
-        if (! class_exists($className)) {
-            eval('class ' . $className . ' {}');
-        }
+        $this->createClassIfNotExists($className);
 
         $object = new $className;
 
@@ -89,9 +103,7 @@ class IdentityMapContext implements Context, SnippetAcceptingContext
             return;
         }
 
-        if (! class_exists($type)) {
-            eval('class ' . $type . ' {}');
-        }
+        $this->createClassIfNotExists($type);
 
         $identity = new $type;
 
@@ -111,9 +123,7 @@ class IdentityMapContext implements Context, SnippetAcceptingContext
      */
     public function aNewEntityWithTheIdentity($name, $type, $identityName)
     {
-        if (! class_exists($type)) {
-            eval('class ' . $type . ' {}');
-        }
+        $this->createClassIfNotExists($type);
 
         $entity = new $type;
         $entity->identity = $this->identities[$identityName];
@@ -389,6 +399,13 @@ class IdentityMapContext implements Context, SnippetAcceptingContext
                 $identity,
                 $className
             ));
+        }
+    }
+
+    private function createClassIfNotExists($className)
+    {
+        if (! class_exists($className)) {
+            eval('class ' . $className . ' extends stdClass {}');
         }
     }
 }

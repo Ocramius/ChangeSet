@@ -31,22 +31,22 @@ class SimpleIdentityMap
             return false;
         }
 
-        $class = get_class($object); // @todo introduce something to resolve the correct class name instead, as `get_class` is too naive
+        $type = $this->identityExtractor->getType($object);
 
         if (null === $identity) {
             $encodedIdentity  = $this->identityExtractor->getEncodedIdentifier($object);
             $computedIdentity = $this->identityExtractor->getIdentity($object);
 
-            $this->identitiesByObjectHashMap[$oid]                                            = $computedIdentity;
-            $this->objectsByIdentityMap[$class . self::IDENTITY_DELIMITER . $encodedIdentity] = $object;
+            $this->identitiesByObjectHashMap[$oid]                                           = $computedIdentity;
+            $this->objectsByIdentityMap[$type . self::IDENTITY_DELIMITER . $encodedIdentity] = $object;
 
             return true; // @todo add different return type for already present values
         }
 
         $encodedIdentity = $this->identityExtractor->encodeIdentifier($identity);
 
-        $this->identitiesByObjectHashMap[$oid]                                            = $identity;
-        $this->objectsByIdentityMap[$class . self::IDENTITY_DELIMITER . $encodedIdentity] = $object;
+        $this->identitiesByObjectHashMap[$oid]                                           = $identity;
+        $this->objectsByIdentityMap[$type . self::IDENTITY_DELIMITER . $encodedIdentity] = $object;
 
         return true; // @todo add different return type for already present values
     }
