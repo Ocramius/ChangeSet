@@ -1,7 +1,7 @@
 # This feature is required in order to correctly handle aliased object types, such as when proxies are involved
-Feature: Identity Map inheritance identifiers
+Feature: Identity Map inheritance operations
   In order to store equivalent objects in the identity map
-  An Identity Map should be able to fetch and retrieve objects by identities even though the class name does not match
+  An Identity Map should be able to fetch and retrieve objects by identities and supertypes
 
   Background:
     Given a subtype "type2" for type "type1"
