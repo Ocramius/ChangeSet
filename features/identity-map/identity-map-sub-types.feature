@@ -22,3 +22,13 @@ Feature: Identity Map inheritance operations
     When I store the entity "example" in the identity map
     When I remove the entity "example" from the identity map
     Then I cannot retrieve object "example" by class "type1" and identity "123"
+
+  Scenario: Check for identity non-existence via subtype in the identity map
+    Given a new entity "example" of type "type1" with identity "123"
+    When I store the entity "example" in the identity map
+    Then identity "123" of type "type2" does not exist in the identity map
+
+  Scenario: Check for identity non-existence via supertype in the identity map
+    Given a new entity "example" of type "type2" with identity "123"
+    When I store the entity "example" in the identity map
+    Then identity "123" of type "type1" does exist in the identity map
