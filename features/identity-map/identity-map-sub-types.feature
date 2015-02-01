@@ -25,15 +25,40 @@ Feature: Identity Map inheritance operations
   Scenario: Register and remove an object will make it unavailable also by subtype
     Given a new entity "example" of type "type2" with identity "123"
     When I store the entity "example" in the identity map
-    When I remove the entity "example" from the identity map
+    And I remove the entity "example" from the identity map
     Then I cannot retrieve object "example" by class "type1" and identity "123"
+    And I cannot retrieve object "example" by class "type2" and identity "123"
 
-  Scenario: Check for identity non-existence via subtype in the identity map
+  Scenario: Register and remove an object by subtype will not remove it from the identity map
+    Given a new entity "example" of type "type1" with identity "123"
+    When I store the entity "example" in the identity map
+    And I cannot remove the identity "123" of type "type2" from the identity map
+
+  Scenario: Register and remove an object by exact type will make it unavailable also by subtype
+    Given a new entity "example" of type "type2" with identity "123"
+    When I store the entity "example" in the identity map
+    And I remove the identity "123" of type "type2" from the identity map
+    Then I cannot retrieve object "example" by class "type1" and identity "123"
+    And I cannot retrieve object "example" by class "type2" and identity "123"
+
+  Scenario: Register and remove an object by supertype identity will make it unavailable also by subtype
+    Given a new entity "example" of type "type2" with identity "123"
+    When I store the entity "example" in the identity map
+    And I remove the identity "123" of type "type1" from the identity map
+    Then I cannot retrieve object "example" by class "type1" and identity "123"
+    And I cannot retrieve object "example" by class "type2" and identity "123"
+
+  Scenario: Check for identity non-existence via subtype
     Given a new entity "example" of type "type1" with identity "123"
     When I store the entity "example" in the identity map
     Then identity "123" of type "type2" does not exist in the identity map
 
-  Scenario: Check for identity non-existence via supertype in the identity map
+  Scenario: Check for identity existence via exact type
+    Given a new entity "example" of type "type2" with identity "123"
+    When I store the entity "example" in the identity map
+    Then identity "123" of type "type2" does exist in the identity map
+
+  Scenario: Check for identity existence via supertype
     Given a new entity "example" of type "type2" with identity "123"
     When I store the entity "example" in the identity map
     Then identity "123" of type "type1" does exist in the identity map
