@@ -10,34 +10,6 @@ use ChangeSet\IdentityExtractor\IdentityExtractorInterface;
 final class SampleIdentityExtractor implements IdentityExtractorInterface
 {
     /**
-     * @var string[]
-     */
-    private $subTypesMap;
-
-    /**
-     * @param $subTypesMap string[]
-     */
-    public function __construct(array $subTypesMap)
-    {
-        $this->subTypesMap = array_map(
-            function ($type) {
-                return (string) $type;
-            },
-            $subTypesMap
-        );
-    }
-
-    /**
-     * {@inheritDoc}
-     */
-    public function getType($object)
-    {
-        $class = get_class($object);
-
-        return isset($this->subTypesMap[$class]) ? $this->subTypesMap[$class] : $class;
-    }
-
-    /**
      * {@inheritDoc}
      */
     public function getIdentity($object)

@@ -6,6 +6,7 @@ use Behat\Behat\Context\Context;
 use Behat\Behat\Context\SnippetAcceptingContext;
 use ChangeSet\IdentityMap\SimpleIdentityMap;
 use ChangeSetTestAsset\Stub\SampleIdentityExtractor;
+use ChangeSetTestAsset\Stub\SampleTypeResolver;
 use stdClass;
 use UnexpectedValueException;
 
@@ -51,7 +52,8 @@ class IdentityMapContext implements Context, SnippetAcceptingContext
     public function aNewIdentityMapWithAnIdentitySerializer()
     {
         $this->identityMap = new SimpleIdentityMap(
-            new SampleIdentityExtractor($this->subTypesMap)
+            new SampleIdentityExtractor(),
+            new SampleTypeResolver($this->subTypesMap)
         );
     }
 

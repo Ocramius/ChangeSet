@@ -2,15 +2,23 @@
 
 namespace ChangeSet\IdentityMap;
 use ChangeSet\IdentityExtractor\IdentityExtractorInterface;
+use ChangeSet\TypeResolver\TypeResolverInterface;
 
 /**
  * @TODO consider bulk API
  */
-class SimpleIdentityMap
+final class SimpleIdentityMap
 {
     const IDENTITY_DELIMITER = '#';
 
+    /**
+     * @var string[] indexed by object identifier
+     */
     private $identitiesByObjectHashMap = array();
+
+    /**
+     * @var object[] indexed by hashed identity
+     */
     private $objectsByIdentityMap     = array();
 
     /**
@@ -18,9 +26,10 @@ class SimpleIdentityMap
      */
     private $identityExtractor;
 
-    public function __construct(IdentityExtractorInterface $identityExtractor)
+    public function __construct(IdentityExtractorInterface $identityExtractor, TypeResolverInterface $typeResolver)
     {
         $this->identityExtractor = $identityExtractor;
+        $this->typeResolver      = $typeResolver;
     }
 
     public function add($object, $identity = null)
@@ -31,7 +40,7 @@ class SimpleIdentityMap
             return false;
         }
 
-        $type = $this->identityExtractor->getType($object);
+        $type = $this->typeResolver->getTypeOfObject($object);
 
         if (null === $identity) {
             $encodedIdentity  = $this->identityExtractor->getEncodedIdentifier($object);
@@ -63,7 +72,7 @@ class SimpleIdentityMap
         $identity = $this->identitiesByObjectHashMap[$oid];
 
         unset(
-            $this->objectsByIdentityMap[get_class($object) . self::IDENTITY_DELIMITER . $identity],
+            $this->objectsByIdentityMap[$this->typeResolver->getTypeOfObject($object) . self::IDENTITY_DELIMITER . $identity],
             $this->identitiesByObjectHashMap[$oid]
         );
 
