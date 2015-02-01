@@ -405,7 +405,7 @@ class IdentityMapContext implements Context, SnippetAcceptingContext
     }
 
     /**
-     * @Then I remove the identity :identity of type :className from the identity map
+     * @Then I cannot remove the identity :identity of type :className from the identity map
      *
      * @param string $identity
      * @param string $className
