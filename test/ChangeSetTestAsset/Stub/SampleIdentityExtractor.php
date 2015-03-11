@@ -7,7 +7,7 @@ use ChangeSet\IdentityExtractor\IdentityExtractorInterface;
 /**
  * Sample identity extractor: handles identity of `stdClass` objects in an opinionated way
  */
-class SampleIdentityExtractor implements IdentityExtractorInterface
+final class SampleIdentityExtractor implements IdentityExtractorInterface
 {
     /**
      * {@inheritDoc}

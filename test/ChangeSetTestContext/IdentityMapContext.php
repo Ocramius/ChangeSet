@@ -6,6 +6,7 @@ use Behat\Behat\Context\Context;
 use Behat\Behat\Context\SnippetAcceptingContext;
 use ChangeSet\IdentityMap\SimpleIdentityMap;
 use ChangeSetTestAsset\Stub\SampleIdentityExtractor;
+use ChangeSetTestAsset\Stub\SampleTypeResolver;
 use stdClass;
 use UnexpectedValueException;
 
@@ -30,12 +31,29 @@ class IdentityMapContext implements Context, SnippetAcceptingContext
     private $identityMap;
 
     /**
+     * @var string[]
+     */
+    private $subTypesMap = [];
+
+    /**
+     * @Given a subtype :subType for type :originalType
+     *
+     * @param string $originalType
+     * @param string $subType
+     */
+    public function aSubtypeForType($originalType, $subType)
+    {
+        $this->subTypesMap[$subType] = $originalType;
+    }
+
+    /**
      * @Given a new IdentityMap with an IdentitySerializer
      */
     public function aNewIdentityMapWithAnIdentitySerializer()
     {
         $this->identityMap = new SimpleIdentityMap(
-            new SampleIdentityExtractor()
+            new SampleIdentityExtractor(),
+            new SampleTypeResolver($this->subTypesMap)
         );
     }
 
@@ -48,9 +66,7 @@ class IdentityMapContext implements Context, SnippetAcceptingContext
      */
     public function aNewEntityWithIdentity($name, $className, $identity)
     {
-        if (! class_exists($className)) {
-            eval('class ' . $className . ' {}');
-        }
+        $this->createClassIfNotExists($className);
 
         $object = new $className;
 
@@ -89,9 +105,7 @@ class IdentityMapContext implements Context, SnippetAcceptingContext
             return;
         }
 
-        if (! class_exists($type)) {
-            eval('class ' . $type . ' {}');
-        }
+        $this->createClassIfNotExists($type);
 
         $identity = new $type;
 
@@ -111,9 +125,7 @@ class IdentityMapContext implements Context, SnippetAcceptingContext
      */
     public function aNewEntityWithTheIdentity($name, $type, $identityName)
     {
-        if (! class_exists($type)) {
-            eval('class ' . $type . ' {}');
-        }
+        $this->createClassIfNotExists($type);
 
         $entity = new $type;
         $entity->identity = $this->identities[$identityName];
@@ -389,6 +401,31 @@ class IdentityMapContext implements Context, SnippetAcceptingContext
                 $identity,
                 $className
             ));
+        }
+    }
+
+    /**
+     * @Then I cannot remove the identity :identity of type :className from the identity map
+     *
+     * @param string $identity
+     * @param string $className
+     */
+    public function iCannotRemoveTheIdentityOfTypeFromTheIdentityMap($identity, $className)
+    {
+        if ($this->identityMap->removeByIdentity($className, $identity)) {
+            throw new UnexpectedValueException(sprintf(
+                'Was not expected to be able to remove identity "%s" for type "%s"'
+                . ' from the identity map: operation should fail',
+                $identity,
+                $className
+            ));
+        }
+    }
+
+    private function createClassIfNotExists($className)
+    {
+        if (! class_exists($className)) {
+            eval('class ' . $className . ' extends stdClass {}');
         }
     }
 }
