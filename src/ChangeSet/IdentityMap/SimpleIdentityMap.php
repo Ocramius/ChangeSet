@@ -1,6 +1,7 @@
 <?php
 
 namespace ChangeSet\IdentityMap;
+
 use ChangeSet\IdentityExtractor\IdentityExtractorInterface;
 
 /**
@@ -31,7 +32,8 @@ class SimpleIdentityMap
             return false;
         }
 
-        $class = get_class($object); // @todo introduce something to resolve the correct class name instead, as `get_class` is too naive
+        // @todo introduce something to resolve the correct class name instead, as `get_class` is too naive
+        $class = get_class($object); 
 
         if (null === $identity) {
             $encodedIdentity  = $this->identityExtractor->getEncodedIdentifier($object);
