@@ -30,8 +30,8 @@
         "behat/behat":               "~3.0"
     },
     "autoload": {
-        "psr-0": {
-            "ChangeSet\\": "src"
+        "psr-4": {
+            "ChangeSet\\": "src/ChangeSet/"
         }
     },
     "autoload-dev": {
