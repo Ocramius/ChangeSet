@@ -19,7 +19,7 @@
         }
     ],
     "require": {
-        "php": "~5.5",
+        "php": "~5.5 || ^7.1",
         "zendframework/zend-eventmanager": "2.*"
     },
     "require-dev": {
