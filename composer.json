@@ -19,7 +19,7 @@
         }
     ],
     "require": {
-        "php": "~5.5",
+        "php": "~5.5 || ^7.1",
         "zendframework/zend-eventmanager": "2.*"
     },
     "require-dev": {
@@ -30,8 +30,8 @@
         "behat/behat":               "~3.0"
     },
     "autoload": {
-        "psr-0": {
-            "ChangeSet\\": "src"
+        "psr-4": {
+            "ChangeSet\\": "src/ChangeSet/"
         }
     },
     "autoload-dev": {
